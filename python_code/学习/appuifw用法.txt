@@ -1,0 +1,726 @@
+#玉树宁峰整理
+appuifw ―  S60 GUI框架 
+
+appuifw 模块提供了S60 UI应用程序框架。
+注 意： 此服务必须运行在主线程上下文环境，更准确地说是UI程序的初始化线程。 
+
+appuifw模块基础 
+
+UI控件管理着所有的应用程序窗口，这是很显然的。 
+
+对于含有多个视图的程序，可以用导航面板的选项卡来切换视图。 
+
+对话框比普通UI控件享有更高优先级，这就是说，对话框往往都会置顶。 
+
+UI控件是由Python类型构建的，可用的类型有： 
+
+   *  Text 
+
+   *  Listbox 
+
+   *  Canvas 
+
+一旦构建了程序主体(app.body )，相应的UI控件就会随之出现在屏幕上。 
+
+Form 是一种万能的对话框类型。 
+
+Content handler 用于实现UI程序之间的高层共性对话，以期简化MIME类型的操作内容。 
+
+下列函数定义了常用的对话框： 
+
+   *  note 
+
+   *  query 
+
+   *  multi query 
+
+   * selection list 
+
+   *  multi selection list 
+
+
+
+   *  popup menu 
+
+一旦执行相应函数，就会出现置顶的对话框，读取用户输入的信息以及确定或取消等操作。然而Form是 
+特例，它以实例操作，所以只有被执行以后才能产生对话框。 
+
+软 键 
+
+软键响应默认为S60平台的初始设定。在没有对话框的情况下，按右软键退出，按左软键弹出选项菜单。 
+PyS60中可以非常简单地设计菜单和右软键事件(详见章节5.1.4)。 
+
+同样地,软键事件对话框也可以自行设计,比如OK和Cancel(中文机型显示为"确定"和"取消")。但是如果 
+要做出独特的对话效果，那么最好用Form。 
+
+模块函数 
+
+以下函数都定义在appuifw模块中(同时没有定义在任何类中)： 
+
+available fonts() 
+
+     获取手机可用的字体列表(Unicode编码)。 
+
+query(label, type [, initial value ]) （shagon注: query(提示信息，输入类型，缺省值(可选)）
+生成一个单域对话框。label是需要显示的提示信息，type是要求输入的数据类型，有以下几种： 
+
+        *’text’ 
+
+        *’code’ 
+
+        *’number’ 
+
+        *’date’ 
+
+        *’time’ 
+
+        *’query’ 
+
+        *’float’ 
+
+     如果设定了initial  value，它将作为输入数据的缺省值（shagon注: 意思是如果用户不输入任何 
+
+     数据而直接按确定，那么就返回这个值）。它有如下定义： 
+
+        *对于文本输入框( ’text’,’code’ )，缺省值是Unicode字符。 
+
+        *对于数值输入框( ’number’)，缺省值是数字。 
+
+        *对于日期输入框( ’date’)，缺省值是上个午夜与时间原点的间隔。 
+
+    确认对话框( ’query’)和时间输入框( ’time’)都没有缺省值，它们分别返回True/None和相应的时间 
+    数值。对于浮点数输入框( ’float’)即便设定了默认值也无效。所有的对话框，如果用户取消都返回 
+    None。 
+
+multi query(label 1, label 2 ) 
+    生成一个双域文本输入对话框(Unicode编码),返回二元组(label 1, label 2 )。如果取消则返回None。 
+
+    （shagon注: multi_query(第一项提示信息，第二项提示信息)） 
+
+note(text [, type [, global ]]) 
+
+     生成一个提示对话框。text(Unicode编码)为要显示的通知信息,type是提示类型,有’error’,’info’ 
+                       
+     和’conf’（shagon注: 依次为错误通知、信息通知、确认通知）。缺省为’info’。
+                                                     
+    如果设定了一个非零整数作为global，将生成一个全局通知。意思是说即便是后台程序调用也会弹出 
+    提示对话框。type支持的对话框与标准对话框完全一样。 
+
+    （shagon注:note(通知信息，通知类型（缺省为'info')，全局参数(可选))） 
+
+popup menu(list [, label ]) 
+
+    生成一个弹出菜单列表。支持一元组或多元组(必须是Unicode编码)。一元菜单直接显示全部项目, 
+    多元菜单根据用户操作显示相应项目。返回选中的项目，如果取消则返回None。 
+    （shagon注:popup_menu(菜单表项，菜单主标题(可选)） 
+
+selection list(choices [, search field=0 ]) 
+
+                                                             
+    生成一个选择列表。返回用户选中的项目，如果取消则返回None。choices是列表项。search field是 
+    查找面板参数，缺省为0即禁用,1为启用。 
+    （shagon注:selection_list(列表表项，查找面板参数(缺省为0即禁用))。当列表项目太多的时候才 
+    适合启用查找面板快速找到选项。但项目很少的情况下应该禁用，否则反而影响用户视线。） 
+
+multi selection list(choices [, style=’checkbox’, search field=0 ]) 
+
+    生成一个多选列表或可标记列表。返回用户选中的所有项目（一个元组），如果取消则返回None。 
+           
+     choices是列表项。 style是列表类型，有 ’checkbox’ 和’checkmark’ ,分别生成多选列表和可标记列表. 
+    缺省为’checkbox’。在多选列表中直接用导航键选中项目，而在可标记列表中还需要笔形键的配合。 
+    search field 是查找面板参数，缺省为0即禁用,1为启用。列表样式见图5.4。 
+
+    （shagon注:multi_selection_list(列表项，列表类型(缺省为'checkbox')，查找面板(缺省为禁用))。 
+    当列表项目太多的时候才适合启用查找面板快速找到选项。但项目很少的情况下应该禁用，否则反而 
+    影响用户视线。） 
+
+    示 例：tuple = appuifw.multi_selection_list(L, style=’checkmark’, search_field=1) 
+
+  Application 类型 
+
+事实上，一旦调用了appuifw模块，马上就会生成唯一的application实例，不过实例名称被改为app。 
+
+Application 类 
+
+    Application实例含有以下属性： 
+
+     body 
+
+         设定程序窗体。目前支持Text,Listbox,Canvas和None。（shagon注:None就是使用缺省窗体） 
+
+     exit key handler 
+
+         设定右软键响应事件。不设定或设定为None都恢复为缺省设定。 
+         （shagon注:缺省设定为"退出"、"取消"等操作） 
+     menu 
+         设定程序菜单。有两种类型： 
+           *(title, callback) 普通菜单。 
+
+           *(title, ((title, callback)[...])) 含有子菜单的多级菜单。 
+
+         title(Unicode编码)是菜单项标题，callback是其响应事件。 
+
+         菜单项的上限是30个。 
+
+         示 例： 
+
+              appuifw.app.menu = [(u"Item 1", item1), 
+                                (u"Submenu 1", 
+                                   ((u"Subitem 1", subitem1), 
+                                    (u"Subitem 2", subitem2)))] 
+
+     screen 
+
+         设定UI屏幕模式。可选模式有'normal','large'和'full'(见图5.3)。 
+
+         （shagon注：依次为标准屏、大屏、全屏） 
+
+         示 例： 
+
+              appuifw.app.screen=’normal’  ＃ （标准屏.显示标题面板和控制面板.） 
+              appuifw.app.screen=’large’ ＃ （大屏.显示控制面板.） 
+              appuifw.app.screen=’full’ ＃ （全屏.） 
+
+     title 
+        设定标题面板的标题。必须是Unicode编码。（shagon注：只有标准屏模式下才能显示） 
+     focus 
+        程序焦点。参数0表示丢失焦点，1表示恢复焦点。 
+        当程序在前台与后台之间切换，或者进入/退出屏幕保护时，将涉及到焦点的问题。 
+        （shagon注：可以这样理解，如果设定了焦点,那就可以在切换到前台时执行一种操作，切换 
+         到后台时执行另一种操作。一般地，按挂机键(红键)就是让程序在后台运行。） 
+
+         示 例： 
+
+              >>> import appuifw 
+              >>> def cb(fg): 
+
+               ...  if(fg): 
+               ...    print "foreground" 
+               ...  else: 
+               ...    print "background" 
+               ... 
+              >>> appuifw.app.focus=cb 
+              >>>   ＃程序切换到后台将显示： 
+              >>> background 
+              >>>   ＃程序切换到前台将显示： 
+              >>> foreground 
+
+         注 意：如果焦点事件设定有误,将引起程序错误。例如在诺基亚6600上有可能引起无法停止的 
+               TypeError。 
+
+     orientation 
+         设定程序风格(只适用于S60 3rd机型)。可选项有:’automatic’,’portrait’,’landscape’. 
+
+                                             。缺省值是’automatic’。 
+         （shagon注:依次为'自动','肖像','风景'） 
+
+     Application实例支持下列方法： 
+
+     activate tab(index ) 
+                        index 
+         激活选择卡视图。            是选项卡组(从0开始)。 
+     full name() 
+
+         返回当前在Python解释器里运行的程序名称(Unicode编码)。 
+
+     uid() 
+
+         返回当前在Python解释器里运行的程序UID(Unicode编码)。 
+
+     set exit() 
+         在当前操作结束后退出程序。 
+     set tabs(tab texts [,callback=None ]) 
+
+         设定选项卡。tab      texts  是一列Unicode字符串。当用导航键在选项卡之间切换,可以变更视图， 
+         同时调用相应的callback      。如果tab    texts  为空或只有一个元素，上述功能无效。 
+         （shagon注:set_tabs(选项卡项目，回调函数(可选))） 
+
+     layout(layout id) 
+         注 意：只适用于S60 2nd FP3 以上机型。 
+
+         返回layout  id 项目的大小和位置(二元组)。位置以屏幕左上角为起始点。逻辑布局见图5.2。 
+                                           1 
+         layout id 是定义在appuifw模块中的常量 : 
+
+         EScreen 
+            屏    幕 
+         EApplicationWindow 
+            程序窗体（占据整个屏幕的窗体） 
+         EStatusPane 
+            状态面板（大部分程序都有状态面板） 
+         EMainPane 
+            主面板（所有程序都有主面板） 
+         EControlPane 
+            控制面板 
+         ESignalPane 
+            信号面板（显示信号强度） 
+         EContextPane 
+            上下文面板（显示运行中的程序）（shagon注:通常是显示程序的图标） 
+         ETitlePane 
+            标题面板（显示程序名称或自定义标题） 
+
+         EBatteryPane 
+            电池面板（显示电池电量信息） 
+
+         EUniversalIndicatorPane 
+
+            通用指示器面板（引起用户的注意）（shagon注:比如屏幕右上角的那个电池图案） 
+
+         ENaviPane 
+
+            导航面板（显示应用程序状态、用户输入状态以及其他相关信息） 
+
+         EFindPane 
+            查找面板（用选择列表取代弹出列表） 
+         EWallpaperPane 
+            壁纸面板 
+         EIndicatorPane 
+
+            指示器面板（引起用户注意） 
+
+         EAColumn 
+            显示小图案和小字标题 
+         EBColumn 
+            显示大图标和大字标题 
+         ECColumn 
+            显示用户输入,与EDColumn配合。 
+         EDColumn 
+            显示附加图标,与ECColumn配合。 
+         EStaconTop 
+            landscape的状态面板与控制面板顶部布局 
+         EStaconBottom 
+            landscape的状态面板与控制面板底部布局 
+         EStatusPaneBottom 
+            landscape的状态面板底部布局 
+         EControlPaneBottom 
+            landscape的控制面板底部布局 
+         EControlPaneTop 
+            landscape的状态面板顶部布局 
+         EStatusPaneTop 
+            landscape的控制面板顶部布局 
+
+         示 例： 
+
+              >>> import appuifw 
+              >>> appuifw.app.layout(appuifw.EMainPane) 
+              ((176, 144), (0, 44)) 
+              >>> ＃诺基亚N70的主面板大小和位置 
+
+Form类型 
+
+Form具有非常大的设计自由度，更通俗点说，它是一个万能对话框。 
+
+用它可以设计出独特的复合对话框，甚至挣脱标准对话框的束缚，做出个性效果。 
+
+Form(fields [, flags=0 ]) 类 
+                                
+     生成Form实例。fields是域描述列表： (label, type[, value]) 
+     其中label是Unicode字符串，作为标题名称。type是’text’,’number’,’date’,’time’,’combo’, 
+     ’float’中的一个，分别对应着：Unicode字符串、普通数字、Unix日期浮点数、Unix时间浮点数、 
+     ([choice label ...], index) 以及普通浮点数。 
+
+    对于’float’ ，即便设定了缺省值，通常也不会显示在UI中。 
+
+Form通过各种属性值来配置对话框。包括域文字信息以及读取用户输入信息。 
+
+Form实例含有以下属性： 
+
+flags 
+    属性标记。目前可用的标记有： 
+    FFormEditModeOnly 
+        设置Form为可编辑模式。 
+    FFormViewModeOnly 
+        设置Form为不可编辑模式。 
+    FFormAutoLabelEdit 
+        允许终端用户编辑Form的标题项。 
+    FFormAutoFormEdit 
+
+        允许终端用户增加或删除Form域。 
+        注意，目前这项功能仍处于试验阶段，不支持所有SDK。 
+
+    FFormDoubleSpaced 
+
+        生成双行距布局。输入域占据两行，第一行显示项目标题，第二行用于数据处理。 
+
+menu 
+                 (title, callback) 
+    设置Form菜单项：                  。 
+    其中title是Unicode字符串，用于显示菜单项名称，callback是事件响应。 
+
+save hook 
+    （shagon注：简单一句话，就是用来实现多级连锁对话框。） 
+    生成一个用于接收自变量并返回布尔值的可请求对象，当用户试图保存当前对话框内容时就会调用 
+    这个对象。随之返回的布尔值决定了是否在UI中显示新的对话框，新对话框是依据前个对话框内容 
+    构建的。如果返回值是False，那么将恢复原对话框。 
+
+Form 实例支持下列方法： 
+
+execute() 
+    执行对话框的生成，使其在UI中可见。 
+insert(index, field descriptor) 
+
+    向Form中插入域描述符（先于index ）。 
+pop() 
+
+    从Form中移除域描述符并返回这个值。 
+length() 
+    统计Form中的域描述符总数。 
+
+下标f[i]用于访问或修改Form f的第i个单元。不过上面已经提到FFormAutoFormEdit 仍处于试验阶段， 
+
+也就是对目前来说，要修改运行中的Form单元结果可能不那么理想。 
+
+Text 类型 
+
+Text是文字处理控件。
+Text实例含有以下属性： 
+
+color 
+    文本颜色。与graphics模块中的颜色定义相同。详见章节5.2。 
+
+focus 
+    控件焦点(布尔值。Ture:恢复焦点,False:丢失焦点)。 
+    通常编辑器控件需要用到导航栏(就像选项卡一样)，所以同时要使用导航面板控件。 
+
+font 
+    文本字体。有两种方法来进行设定： 
+
+       *直接定义字体，形如u"Latin12" 。如果手机不支持这个字体则定义无效。 
+        可以用appuifw.available fonts 来获取手机可用字体列表。 
+
+        示 例： 
+
+             t = appuifw.Text() 
+             t.font =  u"albi17b" ＃设为17号粗斜体 
+             t.font =  u"LatinPlain12" ＃设为拉丁12号常规字体 
+
+       *定义模式字体。 
+                  ’annotation’, ’title’, ’legend’, ’symbol’, ’dense’, ’normal’ 
+        可选模式有： 
+        （shagon注：依次为注解、标题、图注、记号、密集、常规等模式。） 
+
+        设定当前字体示例： 
+             t.font =  "title" ＃设为标题型字体 
+
+        校对当前字体示例： 
+             unicodeFont = t.font 
+
+    字体属性值必须是Unicode字符串，而且代表手机可用的字体，否则无效。 
+    （shagon注：事实上，第一种方法能够选择全部可用字体，而第二种仅能使用其中挑选出的样式， 
+    好处是便于记忆和书写。） 
+highlight color 
+
+    文本加亮颜色。与graphics模块中的颜色定义相同。详见章节5.2 
+
+style 
+    文本样式。相关标志属性在appuifw模块中被定义。样式标志可以组合使用，通过“|”符号连接。 
+    样式标志被划分为两类：一种定义文本，另一种定义加亮。 
+    下面分别作说明。 
+
+    文本样式标志： 
+     STYLE BOLD 
+         粗体文字 
+
+     STYLE UNDERLINE 
+         带下划线文字 
+
+     STYLE ITALIC 
+         斜体文字 
+
+     STYLE STRIKETHROUGH 
+         带删除线文字 
+
+     加亮样式标志： 
+     HIGHLIGHT STANDARD 
+         标准加亮 （shagon注：在文字后面生成一个标准矩形加亮框） 
+     HIGHLIGHT ROUNDED 
+         圆角加亮 （shagon注：在文字后面生成一个圆角矩形加亮框） 
+
+     HIGHLIGHT SHADOW 
+         阴影加亮 （shagon注：生成阴影文字，即复制当前文字用加亮色填充，置于斜后方） 
+
+     对于一串文字只允许使用一种加亮样式，无论这串文字使用了一种还是多种文字样式。 
+
+     示 例： 
+
+          t = appuifw.Text() 
+
+          ＃与以下文字样式及其组合设定类似的都有效： 
+          t.style = appuifw.STYLE_BOLD 
+          t.style = appuifw.STYLE_UNDERLINE 
+          t.style = appuifw.STYLE_ITALIC 
+          t.style = appuifw.STYLE_STRIKETHROUGH 
+          t.style = (appuifw.STYLE_BOLD| 
+             appuifw.STYLE_ITALIC| 
+             appuifw.STYLE_UNDERLINE) 
+
+          ＃与以下加亮样式设定类似的都有效： 
+
+          t.style = appuifw.HIGHLIGHT_STANDARD 
+          t.style = appuifw.HIGHLIGHT_ROUNDED 
+          t.style = appuifw.HIGHLIGHT_SHADOW 
+
+          ＃下面这个加亮样式组合是无效的，请勿尝试： 
+          t.style = (appuifw.HIGHLIGHT_SHADOW|appuifw.HIGHLIGHT_ROUNDED) 
+
+Text 实例支持下列方法： 
+
+add(text) 
+     在光标处插入文字。（shagon注：add(Unicode字符串) ） 
+bind(event code, callback) 
+     设置按键响应（按 event       code 对应键就会调用 callback）。 
+     键位在key_codes模块中被定义。特别地，bind(event            code,None)用于清除已设键位的事件响应. 
+     当然，事实上按键事件最终还是被UI控件所管理的。 
+
+clear() 
+     清除所编辑的内容。 
+
+delete( [pos=0, length=len() ]) 
+     从光标 pos 处开始删除长度为length 的文字。 
+
+get pos() 
+
+     返回当前光标位置。 
+len() 
+
+     返回编辑中的文字长度。 
+
+get( [pos=0, length=len() ]) 
+     检索从光标 pos 处开始长度为length 的文字。 
+
+set(text) 
+
+     置入文字text(Unicode)。 
+set pos(cursor pos ) 
+
+     将光标移动到cursor      pos 位置。 
+
+Listbox类型 
+Listbox实例是一个列表。正如在Symbian中常见的那样，它既可以是单行距布局，也可以是双行距布局。 
+图5.6就是一个带图标的单行距列表。要使用这样的图标需要MBM或MIF格式文件，详见章节5.1.8。 
+
+Listbox(list, callback)类 
+
+     生成Listbox实例。 list 是表单项目，callback  是选项相应的事件响应。其中list  可以有如下几种： 
+
+        * 单行距列表。形如 [item1,item2] 
+
+        * 双行距列表。形如 [(item1,item1description),(item2,item2description)] 
+
+          （shagon注：(项目名称,项目描述) ） 
+
+        * 带图形的单行距列表。形如[(item1,icon1),(item2,icon2)] 
+
+          （shagon注：(项目名称,图形描述) ） 
+
+        * 带图形的双行距列表。形如[(item1,item1description,icon1), 
+                                  (item2,item2description,icon2)] 
+
+          （shagon注：(项目名称,项目描述,图形描述) ） 
+
+     示 例：生成一个带图标的单行距列表―― 
+
+           icon1 = appuifw.Icon(u"z:\\system\\data\\avkon.mbm", 28, 29) 
+           icon2 = appuifw.Icon(u"z:\\system\\data\\avkon.mbm", 40, 41) 
+           entries = [(u"Signal", icon1), 
+                     (u"Battery", icon2)] 
+           lb = appuifw.Listbox(entries, lbox_observe) 
+
+Listbox实例具有下列方法和特性： 
+bind(event code, callback) 
+    设置按键响应（按 event      code 对应键就会调用callback）。 
+    键位在key_codes模块中被定义。特别地，bind(event          code,None)用于清除已设键位的事件响应. 
+    当然，事实上按键事件最终还是被UI控件所管理的。 
+current() 
+
+    返回当前项目的索引值。 
+
+set list(list [, current ]) 
+
+    设定列表。其中 list  的定义与Listbox(list, callback) 中一样。可选项current 指定列表的焦点项目, 
+
+    其值是焦点项目的索引值。 
+
+size 
+
+    获取列表大小(宽度,高度)。只支持S60 3rd以上机型。 
+position 
+
+    获取列表位置(左上角坐标)。只支持S60 3rd 以上机型。 
+
+Icon类型 
+
+Icon实例用于实现在列表中使用图标。
+Symbian有一种特殊的压缩图片格式叫做MBM，它包含了多副位图，通过编号调用所需图片。通常MBM文件 
+还有一个后缀名为mbg的页眉文件，用于描述每个位图。比如‘avkon.mbm’就有‘avkon.mbg’(在SDK中 
+能找到它们)。更多信息请参阅SDK文档[4](“How to provide Icons”)。同时可以了解一下如何将位图 
+集合起来转换成MBM文件，SDK提供了这种工具。 
+
+S60 2nd FP3 引入了一种全新的格式，叫做MIF(Multi-Image File，多图文件)。它与MBM类似,将多个文 
+件压缩并保存为单一文件。注意，只有符合SVG-T标准的文件才能被压缩（SVG-T：Scalable Vector 
+Graphics Tiny，可缩放矢量图形标准简化版）,参阅[10]。 
+
+Icon(filename, bitmap, bitmapMask ) 类 
+
+     创建图标。filename 是完整路径，只能是MBM或MIF文件(仅S60 2nd FP3支持MIF)。 
+     bitmap是位图，bitmapMask 是遮照，都取其索引值。 
+
+ 示 例：以下创建一个标准的信号符号图标 
+
+     icon = appuifw.Icon(u"z:\\system\\data\\avkon.mbm", 28, 29) 
+Content handler 类型 
+
+Content handler实例根据MIME类型处理数据内容。 
+
+Content handler( [callback ]) 类 
+
+    生成Content_handler实例。如果同时设定了可选项 callback  ，那么当处理程序结束时将调用这个 
+     callback. 
+
+Content handler实例支持下列方法： 
+
+open(filename ) 
+
+    在处理程序中打开一个已注册为MIME类型的文件。该程序将被嵌入到主叫线程中。 
+     程序结束时将调用 callback（如果已设）。 
+
+open standalone(filename ) 
+
+    在处理程序中打开一个已注册为MIME类型的文件。该程序将在独立的进程中运行。 
+    注意，在这种情况下不会调用callback（不论是否已设）。 
+
+Canvas 类型 
+
+Canvas是用于处理按键事件和屏幕绘制的UI控件。关于屏幕绘制详见章节5.2。 
+
+Canvas( [redraw callback=None, event callback=None, resize callback=None ]) 类 
+
+    创建Canvas。可选项是按键事件响应描述，按下指定按键就会做出相应的事件响应。 
+    注 意：避免死循环！比如callback直接或间接指向了Canvas本身就可能造成无尽的环路调用。 
+
+    redraw callback 在需要重绘屏幕的时候就自动调用。这应该很好理解，比如用户临时运行其他软件 
+
+    然后又返回，或者菜单弹出以后又消失，这些情况都需要重绘屏幕。一般来说，可以根据左上角位 
+    置和右下角位置来确定重绘的区块范围，不过大多数情况下还是习惯于直接重绘整个Canvas。 
+
+    event callback                                 EEventKeyDown, EEventKey, 
+              将在用户操作按键时被调用。按键事件一共有三种： 
+    EEventKeyUp （shagon注：分别是按下、按住、放开）                        EEventKeyDown 
+                                          。当用户按下按键时将发生 
+    和EEventKey 事件，而当用户放开按键时将发生EEventKeyUp 事件。 
+
+     event callback 的参数是一个字典(关联数组)，它包含以下数据： 
+
+       *’type’:  EEventKeyDown ,EEventKey  和 EEventKeyUp 中的一个。 
+
+       *’keycode’:  按键的keycode。 
+
+       *’scancode’: 按键的scancode。 
+
+       *’modifiers’:针对当前按键事件的操作描述。 
+
+    键盘上的每个按键都有一个以上的scancode，与它对应的可能没有keycode,也可能有多个keycode。 
+    这是因为scancode对应的是手机的物理按键，而keycode是操作系统针对物理按键生成的特定编码。 
+    （shagon注：可以更简单地理解，对于同型号手机，物理按键是一样的，所以scancode是一样的。 
+    但是手机系统可能是大陆行货(简体中文)、港版(繁体中文)或者欧版(英文)等等，它们的字体集是 
+    不同的，所以keycode是不同的。）例如，用诺基亚无线键盘 (SU-8W) 按下A键，scancode是65， 
+    而keycode可能是65也可能是91（大写'A'的ACSII编码是65，小写'a'的ACSII编码是91）,不论是否 
+    按住Shift键或已按下Caps Lock键。 
+
+    在key  codes 模块中定义了scancode和keycode。详见图5.7。 
+
+    以下按键有特殊规定： 
+
+       *                                   （shagon注：编辑键通常用于组合按键,所以 
+        轻按编辑键(也称笔形键)将产生特殊的粘滞效果。 
+        必须维持状态,即放开时不会立刻产生EEventKeyUp 。但如果长按编辑键则无此效果。） 
+
+       *                         （shagon注：待机状态下长按右软键就启动声控标签） 
+        电源键和声控标签键无法进行检测。 
+       *                    appuifw.app.exit key handler 。 
+        每当按下右软键，就会调用                                 （shagon注：不论你是否重新 
+        定义了右软键事件响应） 
+
+           编号     Keycode          Scancode             shagon注 
+            1.    EKeyLeftSoftkey  EScancodeLeftSoftkey 左软键 
+            2.    EKeyYes          EScancodeYes         应答键 
+            3.    EKeyMenu         EScancodeMenu        菜单键 
+            4.    EKey0...9        EScancode0...9       数字键 
+            5.    EKeyStar         EScancodeStar        星号键 
+            6.    EKeyLeftArrow    EScancodeLeftArrow   导航左键 
+            7.    EKeyUpArrow      EScancodeUpArrow     导航上键 
+            8.    EKeySelect       EScancodeSelect      导航中键 
+            9.    EKeyRightArrow   EScancodeRightArrow  导航右键 
+            10.   EKeyDownArrow    EScancodeDownArrow   导航下键 
+            11.   EKeyRightSoftkey EScancodeRightSoftkey 右软键 
+            12.   EKeyNo           EScancodeNo          挂机键 
+            13.   EKeyBackspace    EScancodeBackspace   删除键 
+            14.   EKeyEdit         EScancodeEdit        编辑键 
+            15.   EKeyHash         EScancodeHash        井号键 
+
+                    图5.7 Keycode和Scancode的键位定义 
+
+     其中，挂机键、菜单键、电源键以及声控标签键都有特殊功能，强制性定义，不得更改。 
+
+     resize callback将在窗体大小改变时被调用。根据二元组变量(宽度值,高度值)来新建窗体。 
+
+Canvas 实例含有以下属性： 
+
+size 
+     一个二元组:(宽度值,高度值)。表示当前Canvas的大小。 
+
+Canvas 实例提供了标准的绘图方法，详见章节5.2。 
+
+InfoPopup类型 
+
+注 意：只适用于S60 3rd 以上机型。 
+
+InfoPopup实例是一个用于消息提示的UI小控件。比如它可以产生置顶的帮助信息，告诉用户如何操作。 
+当用户按下任意键或者到了指定时间，这条消息就会自行消失。 
+
+InfoPopup() 类 
+
+     生成一个InfoPopup。 
+
+show(text,  [(x coord, y coord), time shown, time before, alignment ]) 
+     text是显示在InfoPopup中的文字信息。可选项中，(x            coord, y coord) 指定InfoPopup的显示位置， 
+     time shown                     time before                    alignment 
+              指定显示时长(以毫秒计)，                   指定弹出延时(以毫秒计)，                指定窗体 
+    调整方式。 
+
+    缺省情况位置是(0,       0),  time shown time before   alignment    appuifw.EHLeftVTop 
+                                 5秒，           0秒，         指定为 
+
+     alignment 可用值如下，它们都被定义在appuifw模块中2 : 
+
+     EHLeftVTop 
+         水平方向左对齐，垂直方向顶端对齐 
+     EHLeftVCenter 
+         水平方向左对齐，垂直方向居中 
+     EHLeftVBottom 
+
+         水平方向左对齐，垂直方向底端对齐 
+     EHCenterVTop 
+         水平方向居中，       垂直方向顶端对齐 
+     EHCenterVCenter 
+         水平方向居中，       垂直方向居中 
+     EHCenterVBottom 
+
+         水平方向居中，       垂直方向底端对齐 
+     EHRightVTop 
+         水平方向右对齐，垂直方向顶端对齐 
+     EHRightVCenter 
+         水平方向右对齐，垂直方向居中 
+     EHRightVBottom 
+
+         水平方向右对齐，垂直方向底端对齐 
+hide() 
+     立即隐藏弹出窗体。 
+
+示 例： 
+
+     >>> import appuifw 
+     >>> i=appuifw.InfoPopup() 
+     >>> i.show(u"Here is the tip.", (0, 0), 5000, 0, appuifw.EHRightVCenter) 
+     >>> 
+

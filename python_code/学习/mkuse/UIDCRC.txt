@@ -1,0 +1,24 @@
+作者：媩褋留念处
+
+刚才在整理libs的时候无意找到，因为最近在研究sis文件uid4如何生成，一下被模块名称吸引，就研究了下下
+-------------------------
+先找个sis文件改名a.sis放在e盘根目录，然后运行下面代码。
+-------------------------
+import UIDCRC
+
+opr=open("e:\\a.sis","r")#注意，所指的路径必须是个sis文件
+con=opr.read()
+opr.close()
+
+def xeh(x):return x.encode("hex")
+u=con[:4]
+uid1=eval("0x"+xeh(u[3]+u[2]+u[1]+u[0]))
+uid2=0x10003a12
+uid3=0x10000419
+print xeh(UIDCRC.sum(uid1,uid2,uid3))
+-------------------------
+
+print出来的是一个uid
+用x管理器看看，就是sis文件的uid4吧。
+
+顺带说下，_uidcrc.pyd和UIDCRC.PY包含在ModulePack中，应该都是Shrim写的。

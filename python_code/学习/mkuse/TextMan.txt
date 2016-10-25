@@ -1,0 +1,64 @@
+'''[教程]使用条件句之复制全屏
+  ♂恋北の茶莉♀(无敌神话)
+本教程着重介绍一下基本一些条件句使用语法和TextMan复制模块(模块作者：飞影7610)的应用'''
+######源码开始####
+import appuifw,TextMan
+def cn(x):return x.decode('utf-8')
+def cy():
+    text = m.get()
+    if not len(text):
+        appuifw.note(cn('屏幕无内容！'))
+        return
+    if appuifw.query(cn('是否复制全屏？'),'query'):
+        if not TextMan.Copy(text):
+            appuifw.note(cn('模块出错，无法复制!'),'error')
+            return
+        appuifw.note(cn('已成功复制！'),'conf')
+def nt():
+    txt=TextMan.Paste()
+    try:
+        m.add(txt)
+    except:
+        appuifw.note(cn('剪贴版无内容'))
+appuifw.app.body = m = appuifw.Text(cn('文字(复制后也可按笔型键粘贴，看是否一致？)'))
+appuifw.app.menu = [(cn('复制全屏'),cy),(cn('粘贴文字'),nt),(cn('清除屏幕'),lambda:m.clear())]
+appuifw.app.exit_key_handler=appuifw.app.set_exit
+######源码结束####
+'''######源码剖析####
+def cy():
+++++text = m.get()#定义text为屏幕文字
+++++if not len(text):#如果屏幕界面文字长度为0(零)
+++++++++appuifw.note(cn(’屏幕无内容！’))#提示无内容
+++++++++return#返回
+++++if appuifw.query(cn(’是否复制全屏？’),’query’):#屏幕文字长度不为0，则提示是否复制全屏？
+++++++++if not TextMan.Copy(text):#如果复制不成功则：
+++++++++++++appuifw.note(cn(’无法复制!’),’error’)#提示，可能模块出错或者闪存已满
+++++++++++++return#返回
+++++++++appuifw.note(cn(’已成功复制！’),’conf’)#提示成功
+def nt():
+++++txt=TextMan.Paste()#定义txt为粘贴内��
+++++try:
+++++++++m.add(txt)#添加txt文字
+++++except:
+++++++++appuifw.note(cn(’剪贴版无内容’))
+
+########其它########
+附：♂恋北の茶莉♀
+import TextMan
+a=TextMan.Copy('复制文字'.decode('utf-8'))
+b=TextMan.Paste()#这个是粘贴
+print b
+
+#appuifw.app.body.get()是软件界面文字
+#TextMan.Copy(appuifw.app.body.get())是复制全屏
+###########################
+import TextMan
+def ru(x): return x.decode('utf8')
+if TextMan.Copy(ru('你\n们\n好！'),u'[br]'):
+  print ru('复制成功')
+else: print ru('复制失败')
+
+#其中 “u'[br]'”为可选，当此参数为字符串时，则复制全文并会将\n替换为u'[br]'(你也可以自己定义)，而当缺省此参数时则是单纯的复制全文，如：
+if TextMan.Copy(ru('你\n们\n好！')): print ru('复制成功')
+else: print ru('复制失败')
+'''

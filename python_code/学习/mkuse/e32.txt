@@ -1,0 +1,126 @@
+作者：明天见
+
+e32模块用法
+
+在e32中，有以下涵数:
+
+<1>ao_yield()我们先看一个程序:
+
+import e32,appuifw #1
+def stop(): #2
+  global running #3
+  running = 0 #4
+appuifw.app.menu = [(u"stop",stop)] #5
+appuifw.app.body = hack =appuifw.Text() #6
+running = 1 #7
+while running == 1: #8
+  hack.set(u"1") #9
+我们执行上述代码，会发现，程序会不断地循环显示1，根本不能调出菜单停止，停止只能打开Appman关闭程序。如果我们在第十行加入:e32.ao_yield() #10那么，我们就可以顺利的调出菜单停止循环。ao_yield()是让步于其它对象，使其它对象拥有优先权。(例子中appuifw模块使用方法请参考《appuifw模块》)
+====================
+<2>ao_sleep(interval[,callback])延时interval秒，但不挂起其它调度，如设定了callback，则会在interval秒时调用。例：
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+def myhack(): #3
+  hack.add(u"enjoy this...") #4
+hack.set(u"welcome...") #5
+e32.ao_sleep(5,myhack) #6
+hack.add(u"weefic...") #7
+执行后，会显示：
+welcome...weefic...enjoy this...
+====================
+<3>ao_callgate(wrapped_callable)这个涵数为封装涵数，当调用callgate时同时调出callable，自变量可以传递。例：
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+def myhack(msg): #3
+  hack.add(u"enjoy this..."+msg) #4
+byweefic = e32.ao_callgate(myhack) #5
+myhack(u"weefic\n") #6
+byweefic(u"3ghack.com\n") #7
+运行代码，这时会返回：enjoy this...weeficenjoy this...3ghack.com比较简单，不作太多解释。
+====================
+<4>drive_list()、in_emulator()、pys60_version、s60_version_info、pys60_version_info
+现看代码：
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+for i in e32.drive_list():
+  hack.add(i) #3
+hack.add(u"\n") #4
+hack.add(str(e32.in_emulator()).decode("utf-8")) #5
+hack.add(u"\n") #6
+hack.add(e32.pys60_version.decode("utf-8")) #7
+hack.add(u"\n") #8
+for j in e32.s60_version_info:
+  hack.add((str(j)+",").decode("utf-8")) #9
+hack.add(u"\n") #10
+for k in e32.pys60_version_info:
+  hack.add((str(k)+",").decode("utf-8")) #11
+看看我执行后返回的：C:D:E:Z:01.4.2 final2,8,1,4,2,final,0,其中，drive_list()是返回可用驱动列表，对应为#3;in_emulator()是返回是否使用模拟器，是的话返回1，不是就返回0，对应为#5;pys60_version是返回Pys60的版本及符加信息。如我的是1.4.2版本的Py，final表示为该版本的最终版本。对应为#7;s60_version_info是返回S60 SDK版本信息，是二元组。(1,2)表示s60 1st，(2,0)表示s60 2nd，(2,6)表示s60 2nd fp2，(2,8)表示s60 2nd fp3，(3,0)表示s60 2nd 3rd。如我的就是s60 2nd fp3。对应为#9;pys60_version_info与pys60_version区别不大。对应为#11;是不是发觉前两个内有括号而后三个没有括号呢，不要问我为什么，Py设计成这样没规律我也内办法。
+====================
+<5>file_copy(target,sourse)复制文件，如要将c:/weefic.txt复制到e:/并改名为3ghack.com应这样写：
+import e32 #1
+e32.file_copy(u"e:\\3ghack.com",u"c:\\weefic.txt") #2
+====================
+<6>set_home_time(time)这是设置时间，括号内为浮点数。例：
+import e32 #1
+e32.set_home_time(600.0) #2
+请不要运行，一运行就设置时间回到几十年前，会造成很多程序出错误而死机。
+====================
+<7>start_exe(filename,command[,wait])这是器动软件程序，如启动浏览器：(先运行apprun.exe再命令启动浏览器)
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+a = e32.start_exe('z:\\system\\programs\\apprun.exe', 'z:\\system\\apps\\browser\\browser.app "http://3ghack.com/bbs/"',1) #3
+hack.add(str(a).decode("utf-8")) #4
+当浏览器正常退出，a的值变为0，不正常退出则1。当然，你可以不选择wait，那么，无论浏览器是都正常退出，都不会监测，如
+e32.start_exe('z:\\system\\programs\\apprun.exe', 'z:\\system\\apps\\browser\\browser.app "http://3ghack.com/bbs/"')
+====================
+<8>start_server(filename)以独立进程运行某个py程序，作为后台服务。
+import e32 #1
+e32.start_server(u"e:\\weefic.py") #2
+====================
+<9>is_ui_thread()判断是否ui线程，是的话返回1，不是就返回0。
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+hack.add(str(e32.is_ui_thread()).decode("utf-8")) #3
+当然，如用e32.start_server启动的文件不是ui线程。
+====================
+<10>reset_inactivity()重置设备空闲时间。
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+e32.ao_sleep(120,lambda:reset_inactivity) #3
+2分钟后背景灯将会再次点亮。
+====================
+<11>inactivity()返回用户最近一次按键时间到运行inactivity()的时间差。(秒为单位)
+import e32,appuifw
+appuifw.app.body = hack =appuifw.Text()
+def myhack():
+  hack.add(str(e32.inactivity()).decode("utf-8"))
+e32.ao_sleep(2,myhack)
+嘿嘿，从执行到完成，返回了3，即3秒！耶，e32的涵数说完了…还有[类]
+====================
+<11>Ao_lock()类Ao_lock()可以在主线程中执行，但不影响ui线程的响应，处于Ao_lock()中的程序不能关闭。主意，不能同时使用多个Ao_lock()Ao_lock有两个涵数，分别是wait()和signal()使用了wait()的线程将会被挂起，直至signal()释放信号才能继续。进入wait()状态时不影响其它Ao，如菜单仍然可以执行涵数。例：
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+app_lock = e32.Ao_lock() #3
+def myunlock(): #4
+  app_lock.signal() #5
+appuifw.app.menu = [(u"unlock",myunlock)] #6
+hack.add(u"push your right-soft-key\n") #7
+app_lock.wait() #8
+hack.add(u"successful") #9
+一执行代码，会显示push your right-soft-key，当执行到#8时，线程被lock，不能执行#9，而按菜单时，执行#6，调用#4，再运行#5，此时，有singal()释放信号放出，#8限制解除，执行#9
+====================
+<12>Ao_timer()类Ao_timer()是对ao_sleep的拓展，要ao_sleep作用差不多。Ao_timer()有两个涵数，分别是after(interval[,callback])和cancel()，看例：
+import e32,appuifw #1
+appuifw.app.body = hack =appuifw.Text() #2
+aot = e32.Ao_timer() #3
+def myhack(): #4
+  hack.add(u"weefic is so handsome") #5
+aot.after(5,myhack) #6
+aot.cancel() #7
+hack.add(u"weefic isn't handsome,but very very handsome") #8
+执行到#6时，本来等5秒会执行#5，但由于#6中的cancel()取消了，所以只执行#8:weefic isn't handsome,but very very handsome
+附：解决一闪
+from e32 import Ao_lock
+lock=Ao_lock()
+appuifw.app.exit_key_handler=lock.signal
+lock.wait()#按右键即可反回ped，制作成独立软件时记住要删除以上附加的语句。海星！

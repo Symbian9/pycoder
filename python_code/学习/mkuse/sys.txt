@@ -1,0 +1,4 @@
+import sys
+sys.path.append('E:\\System\\Apps\\yinshaopy\\libs\\')
+import sousu
+#导入py文件

@@ -1,0 +1,427 @@
+# emacs-mode: -*- python-*-
+'\nFileName:LexunUBBEdit.py\nModel:PyS60_3rd-6120C\nEdition:1.1.2\ndate:2008_12_31\nWrite:\xe6\xa6\x80\xe6\xa6\x80\nCopyRight 2008\nwap.lexun.com\n'
+from dialog import Wait
+
+def cn(x):
+    return x.decode('utf8')
+
+
+
+def en(x):
+    return x.encode('utf8')
+
+
+wait = Wait(cn('\xe8\xaf\xbb\xe5\x8f\x96\xe4\xb8\xad\xe2\x80\xa6\xe2\x80\xa6'))
+import appuifw
+import e32
+import os
+import graphics
+import re
+import clipboard_CHN
+import uikludges
+from envy import set_app_system
+set_app_system(1)
+class Menu:
+    __module__ = __name__
+
+    def __init__(self):
+        self.menu = {'(img/)%s(/img)': cn('\xe8\xb4\xb4\xe5\x9b\xbe'),
+         '(url=%s)%s(/url)': cn('\xe8\xb6\x85\xe9\x93\xbe'),
+         'BQ1001': cn('\xe8\x83\x9c\xe5\x88\xa9'),
+         'BQ1002': cn('\xe6\x91\x86\xe9\x85\xb7'),
+         'BQ1003': cn('\xe6\x9a\xb4\xe6\xb1\x97'),
+         'BQ1004': cn('\xe6\x99\x95\xe4\xba\x86'),
+         'BQ1005': cn('\xe5\xa4\xa7\xe7\xac\x91'),
+         'BQ1006': cn('\xe8\x84\xb8\xe7\xba\xa2'),
+         'BQ1007': cn('\xe5\x81\xb7\xe7\xac\x91'),
+         'BQ1008': cn('\xe6\xb5\x81\xe6\xb3\xaa'),
+         'BQ1009': cn('\xe8\x89\xb2\xe8\x89\xb2'),
+         'BQ1010': cn('\xe6\x83\x8a\xe8\xae\xb6'),
+         'BQ1011': cn('\xe6\x8a\xbd\xe7\x83\x9f'),
+         'BQ1012': cn('\xe7\x96\x91\xe9\x97\xae'),
+         'BQ1013': cn('\xe8\xb0\x83\xe7\x9a\xae'),
+         'BQ1014': cn('\xe9\xa3\x9e\xe5\x90\xbb'),
+         'BQ1015': cn('\xe6\x84\xa4\xe6\x80\x92'),
+         'BQ1016': cn('\xe5\xae\xb3\xe7\xbe\x9e'),
+         'BQ1017': cn('\xe5\x88\xab\xe5\x90\xb5'),
+         'BQ1018': cn('\xe6\xac\xa2\xe8\xbf\x8e'),
+         'BQ1019': cn('\xe5\xbe\xae\xe7\xac\x91'),
+         'BQ1020': cn('\xe7\x9d\xa1\xe8\xa7\x89'),
+         'BQ1021': cn('\xe9\x80\x81\xe8\x8a\xb1'),
+         'BQ1022': cn('\xe9\x97\xad\xe5\x98\xb4'),
+         'BQ1023': cn('\xe5\x86\x8d\xe8\xa7\x81'),
+         'BQ1024': cn('\xe6\x93\xa6\xe6\xb1\x97'),
+         'BQ1025': cn('\xe5\x8f\x91\xe5\x91\x86'),
+         'BQ1026': cn('\xe5\x8f\xaf\xe6\x80\x9c'),
+         'BQ1027': cn('\xe6\x8d\x89\xe7\x8b\x82'),
+         'BQ1028': cn('\xe4\xba\xb2\xe4\xba\xb2'),
+         'BQ1029': cn('\xe9\x84\x99\xe8\xa7\x86'),
+         'BQ1030': cn('\xe5\x92\x92\xe9\xaa\x82'),
+         'BQ1031': cn('\xe5\xa5\xbd\xe5\x9b\xb0')}
+        try:
+            self.__img__ = graphics.Image.open('E:\\System\\Apps\\LexunUBBEdit\\LexunUBB.png')
+        except:
+            appuifw.note(cn('\xe5\x9b\xbe\xe7\x89\x87\xe6\x9c\xaa\xe6\x89\xbe\xe5\x88\xb0\xef\xbc\x81\n\xe8\xaf\xb7\xe9\x87\x8d\xe6\x96\xb0\xe5\xae\x89\xe8\xa3\x85\xe6\x9c\xac\xe8\xbd\xaf\xe4\xbb\xb6\xef\xbc\x81'), 'error')
+            os.abort()
+        self.img = graphics.Image.new(self.__img__.size)
+        self.img.blit(self.__img__)
+        self.list = self.menu.keys()
+        self.list.sort()
+
+
+
+menu = Menu()
+class Window:
+    __module__ = __name__
+
+    def __init__(self):
+        self.win = None
+        self.x = 0
+        self.y = 0
+        self.pos = 0
+        self.txt = ''
+
+
+
+    def set(self):
+        self.win = appuifw.Canvas(event_callback=self.handle_redraw, redraw_callback=self.handle_redraw)
+        appuifw.app.body = self.win
+        self.win.bind(63498, self.down)
+        self.win.bind(63497, self.up)
+        self.win.bind(63495, self.left)
+        self.win.bind(63496, self.right)
+        self.win.bind(63557, self.select)
+
+
+
+    def handle_redraw(self, rect):
+        self.win.blit(menu.img)
+        self.win.rectangle((((0 + (36 * self.x)) + (1 * self.x)),
+         ((0 + (18 * self.y)) + (1 * self.y)),
+         ((36 + (36 * self.x)) + (1 * self.x)),
+         ((19 + (18 * self.y)) + (1 * self.y))), 16711680)
+        self.pos = self.getpos()
+        self.txt = menu.list[self.pos]
+        txt = menu.menu[self.txt]
+        self.win.text((30,
+         235), txt, fill=16711680, font=('dense',
+         24))
+
+
+
+    def select(self):
+        edit.back()
+        if (self.pos == 0):
+            try:
+                gettxt = clipboard_CHN.Get()
+            except:
+                gettxt = u''
+            if (len(gettxt) > 80):
+                gettxt = u''
+            txt = appuifw.query(cn('\xe8\xbe\x93\xe5\x85\xa5\xe5\x9b\xbe\xe7\x89\x87\xe5\x9c\xb0\xe5\x9d\x80'), 'text', gettxt)
+            if txt:
+                edit.body.add(eval(((repr(self.txt) + '%') + repr(txt))))
+            else:
+                pos = edit.body.get_pos()
+                edit.body.add(eval(((repr(self.txt) + '%') + repr(u''))))
+                edit.body.set_pos((pos + 6))
+        elif (self.pos == 1):
+            try:
+                gettxt = clipboard_CHN.Get()
+            except:
+                gettxt = u''
+            if (len(gettxt) > 80):
+                gettxt = u''
+            txt = appuifw.query(cn('\xe8\xbe\x93\xe5\x85\xa5\xe9\x93\xbe\xe6\x8e\xa5\xe5\x9c\xb0\xe5\x9d\x80'), 'text', gettxt)
+            if txt:
+                edit.body.add(eval(((repr(self.txt) + '%') + `(txt,
+                 cn('\xe5\x85\x8d\xe8\xb4\xb9\xe4\xb8\x8b\xe8\xbd\xbd'))`)))
+            else:
+                pos = edit.body.get_pos()
+                edit.body.add(eval(((repr(self.txt) + '%') + `(u'',
+                 cn('\xe5\x85\x8d\xe8\xb4\xb9\xe4\xb8\x8b\xe8\xbd\xbd'))`)))
+                edit.body.set_pos((pos + 5))
+        else:
+            edit.body.add(cn(self.txt))
+
+
+
+    def getpos(self):
+        return (self.x + (self.y * 3))
+
+
+
+    def down(self):
+        if (self.y < 10):
+            self.y += 1
+        elif (self.y >= 10):
+            self.y = 0
+
+
+
+    def up(self):
+        if (self.y == 0):
+            self.y = 10
+        elif (self.y <= 10):
+            self.y -= 1
+
+
+
+    def left(self):
+        if (self.x == 0):
+            self.x = 2
+        elif (self.x <= 2):
+            self.x -= 1
+
+
+
+    def right(self):
+        if (self.x == 2):
+            self.x = 0
+        elif (self.x >= 0):
+            self.x += 1
+
+
+
+win = Window()
+class Fileman:
+    __module__ = __name__
+
+    def __init__(self):
+        self.path = 'E:\\LexunUBB\\'
+        if (os.path.exists(self.path) == False):
+            os.mkdir(self.path)
+        list = os.listdir(self.path)
+        self.list = []
+        if (list != None):
+            for i in list:
+                if (i[-4:].lower() == '.txt'):
+                    self.list.append(cn(i))
+
+        else:
+            self.list.append(cn('<\xe7\xa9\xba>'))
+        if (len(self.list) == 0):
+            self.list.append(cn('<\xe7\xa9\xba>'))
+        self.body = appuifw.Listbox(self.list, self.__callback__)
+        self.body.bind(8, self.__deleted__)
+
+
+
+    def __callback__(self):
+        current = self.body.current()
+        if (self.list[current] == u'<\u7a7a>'):
+            return False
+        else:
+            edit.addfile(en(self.list[current]))
+
+
+
+    def __deleted__(self):
+        current = self.body.current()
+        if (self.list[current] == u'<\u7a7a>'):
+            return False
+        if (appuifw.query(cn('\xe7\xa1\xae\xe8\xae\xa4\xe5\x88\xa0\xe9\x99\xa4\xe6\x96\x87\xe4\xbb\xb6'), 'query') == None):
+            return False
+        os.remove((self.path + en(self.list[current])))
+        del self.list[current]
+        if (len(self.list) == 0):
+            self.list.append(cn('<\xe7\xa9\xba>'))
+        self.body.set_list(self.list)
+
+
+
+fileman = Fileman()
+class UBBEdit:
+    __module__ = __name__
+
+    def __init__(self):
+        e32.ao_yield()
+        self.body = appuifw.Text()
+        self.keytrue = False
+        self.filename = ''
+        self.body.color = (0,
+         0,
+         255)
+        self.body.font = ('dense',
+         18)
+        self.interim = appuifw.Text()
+        self.interim.color = (255,
+         0,
+         0)
+        self.interim.font = ('title',
+         18)
+        self.interim.style = appuifw.STYLE_BOLD
+        win.set()
+        appuifw.app.body = self.body
+        self.body.bind(63557, self.event)
+        self.body.bind(63586, self.undue)
+        self.interim.bind(63498, self.end)
+        self.interim.bind(63497, self.start)
+        self.interim.bind(63586, self.copy)
+        self.interim.bind(48, self.clear)
+        self.interim.bind(49, self.showmenu)
+        self.interim.bind(50, self.save)
+        self.interim.bind(51, self.fileman)
+        appuifw.app.exit_key_handler = self.exit
+        appuifw.app.menu = []
+        appuifw.app.title = u'LexunUBBEdit'
+        self.r = re.compile(' +', re.S)
+
+
+
+    def showmenu(self):
+        self.keytrue = True
+        appuifw.app.body = win.win
+        appuifw.app.exit_key_handler = self.hidemenu
+
+
+
+    def exit(self):
+        exit = 1
+        if self.body.len():
+            if (appuifw.query(cn('\xe6\x98\xaf\xe5\x90\xa6\xe4\xbf\x9d\xe5\xad\x98'), 'query') == None):
+                exit = 1
+            else:
+                exit = self.save()
+        elif (appuifw.query(cn('\xe6\x98\xaf\xe5\x90\xa6\xe9\x80\x80\xe5\x87\xba'), 'query') == None):
+            exit = 0
+        else:
+            exit = 1
+        if exit:
+            os.abort()
+
+
+
+    def start(self):
+        self.body.set_pos(0)
+
+
+
+    def end(self):
+        self.body.set_pos(self.body.len())
+
+
+
+    def clear(self):
+        self.body.set(u'')
+
+
+
+    def event(self):
+        self.body.add(u'\n')
+
+
+
+    def undue(self):
+        self.interim.set(cn('\t-=\xe5\xb8\xae\xe5\x8a\xa9=-\n\xe7\xbb\xbf\xe9\x94\xae+0 \xe6\xb8\x85\xe9\x99\xa4\xe5\xb1\x8f\xe5\xb9\x95\n\xe7\xbb\xbf\xe9\x94\xae+1 \xe8\xa1\xa8\xe6\x83\x85\xe3\x80\x81\xe8\xb6\x85\xe9\x93\xbe\xe6\x88\x96\xe8\xb4\xb4\xe5\x9b\xbe\n\xe7\xbb\xbf\xe9\x94\xae+2 \xe4\xbf\x9d\xe5\xad\x98\xe5\xbd\x93\xe5\x89\x8d\xe5\xb1\x8f\xe5\xb9\x95\xe5\x86\x85\xe5\xae\xb9\n\xe7\xbb\xbf\xe9\x94\xae+3 \xe6\xb7\xbb\xe5\x8a\xa0\xe6\x96\x87\xe6\x9c\xac\n\xe7\xbb\xbf\xe9\x94\xae+\xe5\xaf\xbc\xe8\x88\xaa\xe4\xb8\x8a \xe8\xb7\xb3\xe8\x87\xb3\xe5\xbc\x80\xe5\xa4\xb4\n\xe7\xbb\xbf\xe9\x94\xae+\xe5\xaf\xbc\xe8\x88\xaa\xe4\xb8\x8b \xe8\xb7\xb3\xe8\x87\xb3\xe7\xbb\x93\xe5\xb0\xbe\n\xe7\xbb\xbf\xe9\x94\xae+\xe7\xbb\xbf\xe9\x94\xae \xe5\xa4\x8d\xe5\x88\xb6\xe5\x85\xa8\xe9\x83\xa8\n-=LexunUBBEdit V1.1.2=-\n'))
+        appuifw.app.body = self.interim
+        self.interim.focus = False
+        appuifw.app.exit_key_handler = self.back
+        uikludges.set_right_softkey_text(cn('\xe8\xbf\x94\xe5\x9b\x9e'))
+        e32.ao_sleep(1)
+        if (self.keytrue == False):
+            self.back()
+
+
+
+    def back(self):
+        appuifw.app.body = self.body
+        appuifw.app.exit_key_handler = self.exit
+        uikludges.set_right_softkey_text(cn('\xe9\x80\x80\xe5\x87\xba'))
+        self.keytrue = False
+
+
+
+    def hidemenu(self):
+        self.keytrue = False
+        appuifw.app.body = self.body
+        appuifw.app.exit_key_handler = self.exit
+        uikludges.set_right_softkey_text(cn('\xe9\x80\x80\xe5\x87\xba'))
+
+
+
+    def fileman(self):
+        self.keytrue = True
+        appuifw.app.body = fileman.body
+        appuifw.app.exit_key_handler = self.back
+
+
+
+    def addfile(self, pathway):
+        wait.set_label(cn('\xe8\xaf\xbb\xe5\x8f\x96\xe4\xb8\xad\xe2\x80\xa6\xe2\x80\xa6'))
+        wait.show()
+        e32.ao_sleep(1)
+        try:
+            file = open((fileman.path + pathway), 'r')
+            txt = file.read()
+            file.close
+            self.body.add(cn(txt))
+            self.filename = pathway[:-4]
+            appuifw.app.title = cn(pathway[:-4])
+        except:
+            wait.set_label(cn('\xe8\xaf\xbb\xe5\x8f\x96\xe5\xa4\xb1\xe8\xb4\xa5'))
+            wait.show()
+            self.filename = ''
+            appuifw.app.title = u'LexunUBBEdit'
+            e32.ao_sleep(1)
+        wait.close()
+        self.back()
+
+
+
+    def copy(self):
+        self.txt = self.body.get()
+        if self.txt:
+            temp = self.txt.replace(u'\u2029', '///')
+            lit = temp.split('///')
+            del temp
+            str = ''
+            for i in lit:
+                r2 = self.r.match(i)
+                if r2:
+                    ends = r2.end()
+                    str = (((str + (cn('\xe2\x80\xbb') * ends)) + i[ends:]) + '///')
+                else:
+                    str = ((str + i) + '///')
+
+            try:
+                clipboard_CHN.Set(str)
+                appuifw.note(cn('\xe5\xa4\x8d\xe5\x88\xb6\xe6\x88\x90\xe5\x8a\x9f'), 'conf')
+            except:
+                appuifw.note(cn('\xe5\xa4\xb1\xe8\xb4\xa5'), 'error')
+        else:
+            appuifw.note(cn('\xe6\xb2\xa1\xe6\x9c\x89\xe5\x86\x85\xe5\xae\xb9'), 'error')
+
+
+
+    def save(self):
+        if (self.body.len() == 0):
+            appuifw.note(cn('\xe6\xb2\xa1\xe6\x9c\x89\xe5\x86\x85\xe5\xae\xb9'), 'error')
+            return False
+        name = appuifw.query(cn('\xe8\xbe\x93\xe5\x85\xa5\xe6\x96\x87\xe4\xbb\xb6\xe5\x90\x8d'), 'text', cn(self.filename))
+        if (name == None):
+            return False
+        txt = self.body.get()
+        if (os.path.exists(((fileman.path + en(name)) + '.txt')) == False):
+            file = open(((fileman.path + en(name)) + '.txt'), 'w')
+            file.write(en(txt))
+            file.close()
+            appuifw.note(cn('\xe4\xbf\x9d\xe5\xad\x98\xe6\x88\x90\xe5\x8a\x9f'), 'info')
+            return True
+        else:
+            name = appuifw.query(cn('\xe8\xbe\x93\xe5\x85\xa5\xe6\x96\x87\xe4\xbb\xb6\xe5\x90\x8d\xe5\xb7\xb2\xe7\xbb\x8f\xe5\xad\x98\xe5\x9c\xa8\xef\xbc\x81\n\xe8\xaf\xb7\xe9\x87\x8d\xe6\x96\xb0\xe8\xbe\x93\xe5\x85\xa5\xef\xbc\x81\n\xe6\x88\x96\xe8\x80\x85\xe5\xb0\x86\xe4\xbc\x9a\xe8\xa6\x86\xe7\x9b\x96\xe5\x8e\x9f\xe6\x96\x87\xe4\xbb\xb6\xef\xbc\x81'), 'text', cn(self.filename))
+            if name:
+                file = open(((fileman.path + en(name)) + '.txt'), 'w')
+                file.write(en(txt))
+                file.close()
+                appuifw.note(cn('\xe4\xbf\x9d\xe5\xad\x98\xe6\x88\x90\xe5\x8a\x9f'), 'info')
+                return True
+            else:
+                return False
+
+
+
+edit = UBBEdit()
+
+# local variables:
+# tab-width: 4

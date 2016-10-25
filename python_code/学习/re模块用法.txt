@@ -1,0 +1,412 @@
+前言：
+本教程是介绍和讲解re模块下的函数，在学习本教程之前，需要对正则式有一点了解，不然很可能会出现看懂意思却感觉是没有用处的现象。
+
+
+1、compile函数
+compile(string[,模式])
+请见谅，因为我也不清楚函数原型，只能借用“string”和“模式”来表示函数里面的参数了，请勿作为函数参数原型。
+该函数的作用是将string正则式编译为”RegexObject”实例，编译后可以为不同的操作提供方法，如匹配搜索或字符替换。(这句看不懂不要紧，往下看，明白一点就可以了，用不着太深入调查，凡是说到什么实例的，不懂都不要紧，看明白一点就ok了)
+【string】正则表达式(可以说只是一串字符串)
+【模式】：可选参数，可选值是re模块下的一些变量：(dir(re)可以看到)
+〖DOTALL〗或〖S〗：使正则式中“.”匹配包括换行在内的所有字符
+〖IGNORECASE〗或〖I〗：使匹配对大小写不敏感
+〖LOCALE〗或〖L〗：做本地化识别(locale-aware)匹配
+〖MULTILINE〗或〖M〗：多行匹配，会影响正则式中的匹配行首“^”和匹配行尾“$”
+〖VERBOSE〗或〖X〗：能够使用REs的verbose状态，使其被组织得更清晰易懂
+
+以下摘抄自《Python正则表达式操作指南》，出处：http://www.amk.ca/python/howto/regex/，作者：A.M. Kuchling （amk@amk.ca），翻译：FireHare
+##########################
+I
+IGNORECASE
+使匹配对大小写不敏感；字符类和字符串匹配字母时忽略大小写。举个例子，[A-Z]也可以匹配小写字母，Spam 可以匹配 "Spam", "spam", 或 "spAM"。这个小写字母并不考虑当前位置。
+L
+LOCALE
+影响 \w, \W, \b, 和 \B，这取决于当前的本地化设置。
+locales 是 C 语言库中的一项功能，是用来为需要考虑不同语言的编程提供帮助的。举个例子，如果你正在处理法文文本，你想用 \w+ 来匹配文字，但 \w 只匹配字符类 [A-Za-z]；它并不能匹配 "é" 或 "ç"。如果你的系统配置适当且本地化设置为法语，那么内部的 C 函数将告诉程序 "é" 也应该被认为是一个字母。当在编译正则表达式时使用 LOCALE 标志会得到用这些 C 函数来处理 \w 后的编译对象；这会更慢，但也会象你希望的那样可以用 \w+ 来匹配法文文本。
+M
+MULTILINE
+(此时 ^ 和 $ 不会被解释)
+使用 "^" 只匹配字符串的开始，而 $ 则只匹配字符串的结尾和直接在换行前（如果有的话）的字符串结尾。当本标志指定后， "^" 匹配字符串的开始和字符串中每行的开始。同样的， $ 元字符匹配字符串结尾和字符串中每行的结尾（直接在每个换行之前）。
+S
+DOTALL
+使 "." 特殊字符完全匹配任何字符，包括换行；没有这个标志， "." 匹配除了换行外的任何字符。
+X
+VERBOSE
+该标志通过给予你更灵活的格式以便你将正则表达式写得更易于理解。当该标志被指定时，在 RE 字符串中的空白符被忽略，除非该空白符在字符类中或在反斜杠之后；这可以让你更清晰地组织和缩进 RE。它也可以允许你将注释写入 RE，这些注释会被引擎忽略；注释用 "#"号 来标识，不过该符号不能在字符串或反斜杠之后。
+举个例子，这里有一个使用 re.VERBOSE 的 RE；看看读它轻松了多少？
+##########################
+
+compile例子:
+####
+>>> import re
+>>> p=re.compile('[1-9]+')#正常模式
+####
+就这样，将'[1-9]'编译为”RegexObject”实例，为以后的不同操作提供方法(前面说过)。
+
+看不懂？继续往下看，还会用到该函数！
+
+RegexObject实例支持如下操作(继前面示例dir(p)一下可以看到)：
+match
+search
+scanner
+findall
+finditer
+split
+sub
+subn
+
+
+1.1 match函数  (RegexObject)：
+match(string)
+作用：匹配首次出现的字符后返回一个“MatchObject”实例，如果无法匹配则返回None
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+####
+
+“MatchObject”实例支持以下函数(继上面示例dir(m)可看到)：
+start
+end
+span
+expand(未知)
+group
+groups
+groupdict(未知)
+
+1.1.1、start函数和end函数   (MatchObject)：
+start()，没有参数
+作用：返回被匹配的出现位置(首位)
+end()，没有参数
+作用：同理返回被匹配的出现位置(末位)
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+>>> print m.start()
+0
+>>> print m.end()
+4
+>>> 
+####
+
+1.1.2、span函数   (MatchObject)：
+span()
+作用：以元组返回被匹配的出现位置：(首位,末位)，相当于(start,end)
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+>>> print m.span()
+(0, 4)
+>>> 
+####
+
+
+1.1.3、group函数和groups函数   (MatchObject)：
+group([index])
+作用：返回被匹配的字符串
+可选参数是在正则式中匹配小组时用的，缺省为0
+groups()
+作用：返回所有被匹配的小组
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+>>> print m.group()
+'1949'
+>>> p=re.compile('((1)9)49')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+>>> print m.group(0)
+'1949'
+>>> print m.group(1)
+'19'
+>>> print m.group(2)
+'1'
+>>> print m.groups()
+('19', '1')
+>>> 
+####
+
+1.2、search函数(RegexObject)：
+search(string)
+作用：跟match函数一模一样：匹配首次出现的字符后返回一个“MatchObject”实例，如果无法匹配则返回None
+用法也跟match一模一样，所以就省略了吧！
+
+
+笔记：match和search的区别
+【match】的匹配方式是只进行一次匹配，也就是只匹配字符串的首字符，如果位置不在0，那么返回None
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+>>> print m
+<_sre.SRE_Match object at 0x188f480>
+>>> print m.group()
+'1949'
+>>> p=re.compile('10')
+>>> m=p.match('1949年10月1日是新中国成立的日子！')
+>>> print m
+None
+>>> 
+####
+
+
+【search】则扫描整个字符串，直到找到第一个匹配的为止，如没有匹配，则返回None
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.search('1949年10月1日是新中国成立的日子！')
+>>> print m
+<_sre.SRE_Match object at 0x188f480>
+>>> print m.group()
+'1949'
+>>> p=re.compile('10')
+>>> m=p.search('1949年10月1日是新中国成立的日子！')
+>>> print m
+<_sre.SRE_Match object at 0x188f480>
+>>> print m.group()
+'10'
+>>> 
+####
+
+
+
+
+1.3、scanner函数  (RegexObject)：
+scanner(string)
+作用：未知具体作用，但是能达到下面说的效果
+示例：
+####
+>>> import re
+>>> p=re.compile('1949')
+>>> m=p.scanner('1949年10月1日是新中国成立的日子！')
+>>> m.match().group()
+'1949'
+>>> m.match().span()
+(0, 4)
+>>> m.search().group()
+'1949'
+>>> m.search().span()
+(0, 4)
+>>> 
+####
+
+
+1.4、findall函数  (RegexObject)：
+findall(string)
+作用：将所有被匹配的字符以列表形式返回
+示例：
+####
+>>> import re
+>>> p=re.compile('[1-9]+')
+>>> print p.findall('我今年19岁，学PY已有1年多，我的QQ号是519998338')
+['19', '1', '519998338']
+>>> 
+####
+看，所有数字都被匹配出来了！
+
+1.5、finditer函数  (RegexObject)：
+findter(string)
+作用：返回匹配出的所有“MatchObject”实例迭代
+示例：
+####
+>>> import re
+>>> p=re.compile('[1-9]+')
+>>> m=p.finditer('我今年19岁，学PY已有1年多，我的QQ号是519998338')
+>>> for i in m:
+...print i.group()
+...
+'19'
+'1'
+'519998338'
+>>> 
+####
+
+
+1.6、split函数  (RegexObject)：
+split(string[,maxsplit])
+作用：将匹配出的字符对整个字符串进行切片
+可选值maxsplit为切片的次数，默认值为0(无限)
+示例：
+####
+>>> import re
+>>> p=re.compile('[0-9]')
+>>> m=p.split('a1b2c3d4e5f6g7h8i9j0k')
+>>> print m
+['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+>>> m=p.split('a1b2c3d4e5f6g7h8i9j0k',3)
+>>> print m
+['a', 'b', 'c', 'd4e5f6g7h8i9j0k']
+>>> 
+####
+
+
+1.7、sub函数和subn函数  (RegexObject)：
+两函数参数一样：
+sub(replacement,string[,count])
+subn(replacement,string[,count])
+replacement：替换者
+string：字符串
+count：替换的最大次数，可选参数，缺省值为0(无限)
+两者作用：在string中将目标字符串替换成replacement
+区别：
+〖sub〗返回替换后的字符串
+〖subn〗返回替换后的字符串和被替换的次数组成的元组
+示例：
+####
+>>> import re
+>>>s='a1b2c3d4e5f6g7h8i9j'
+>>> p=re.compile('[1-9]')
+>>> 
+>>> print p.subn('0',s)
+'a0b0c0d0e0f0g0h0i0j0k'
+>>> 
+>>> print p.subn('0',s)
+('a0b0c0d0e0f0g0h0i0j0k', 9)
+>>> 
+####
+
+
+学到这里，你或许会想：前面说错了compile应该是一个类，不是函数！
+回答：不！compile确确实实是一个function，不是class
+
+
+
+
+
+
+
+同时，match、search、findall、finditer、split、sub、subn也是re模块下的顶级函数，只不过用法一些细微差别，但是作用是一样！
+
+2、match函数    re：
+match(restring,string)
+作用：同样是匹配首次出现的字符串后返回一个“MatchObject”实例，如果无法匹配则返回None
+restring：正则式字符串
+string：目标字符串
+示例：
+####
+>>> import re
+>>> m=re.match('[0-9]+','2008年5月12日，中国发生了汶川大地震')
+>>> print m.group()
+'2008'
+>>> 
+####
+剩余用法与“RegexObject”实例下的match函数一样
+
+3、search函数    re：
+search(restring,string)
+作用：同样跟match函数一模一样，匹配首次出现的字符后返回一个“MatchObject”实例，如果无法匹配则返回None
+restring：正则式字符串
+string：目标字符串
+用法也跟顶级函数match一模一样
+
+
+4、findall函数   re：
+findall(restring,string)
+作用：同样是将所有匹配的字符以列表形式返回
+restring：正则式字符串
+string：目标字符串
+示例：
+####
+>>> import re
+>>> m=re.findall('[a-z]+','苹果：apple，香蕉：banana，橘子：orange')
+>>> print m
+['apple', 'banana', 'orange']
+>>> 
+####
+
+5、finditer函数   re：
+finditer(restring,string)
+作用：同样是返回匹配出的所有“MatchObject”实例迭带
+restring：正则式字符串
+string：目标字符串
+示例：
+####
+>>> import re
+>>> m=re.finditer('[a-z]+','苹果：apple，香蕉：banana，橘子：orange')
+>>> for i in m:
+...print i.group()
+...
+'apple'
+'banana'
+'orange'
+>>> 
+####
+
+
+6、split函数   re：
+split(resep,string[,maxsplit])
+作用：以resep作为分割符对string进行分割，返回列表
+resep：分割符(正则式字符串)
+string：目标字符串
+maxsplit：最大分割数，可选参数，缺省值0(无限)
+示例：
+####
+>>> import re
+>>> m=re.split('[^a-z]+','苹果：apple，香蕉：banana，橘子：orange')
+>>> print m
+['apple', 'banana', 'orange']
+>>> 
+####
+
+
+7、sub函数和subn函数   re：
+两函数参数一样
+sub(reold, new, string[,maxreplace])
+subn(reold, new, string[,maxreplace])
+reold：被替换者(正则式字符串)
+new：替换者
+string：目标字符串
+maxreplace：最大分割数，可选参数，缺省值0(无限)
+两者作用：在string中将reold替换成new
+区别：
+〖sub〗返回替换后的字符串
+〖subn〗返回替换后的的字符串和被替换的次数所组成的元组
+示例：
+####
+>>> import re
+>>> m=re.sub('a|b', 'c' ,'apple,banana,orange')
+>>> print m
+'cpple,ccncn,orcnge'
+>>> 
+>>> m=re.subn('a|b', 'c' ,'apple,banana,orange')
+>>> print m
+('cpple,ccncn,orcnge', 5)
+>>> 
+####
+
+
+
+常见的函数基本讲完，还有如下函数没讲：
+escape
+purge(未知)
+template(未知)
+
+8、escape函数   re:
+escape(string)
+作用：将string转换成正则式形式，如'[]'会转换成'\[\]'，'.'转换成'\.'等。
+示例：
+###
+>>> import re
+>>> m=re.escape('\.+-?$&@,5!{}|:()[]')
+>>> m
+'\\\.\+\-\?\$\&\@\,5\!\{\}\|\:\(\)\[\]'
+>>> 
+###
+
+
+我已经很努力了，但是还有几个函数弄不清……
+
+教程作者：陆楚良
+联系方式：
+QQ：519998338
+e-mail：lu_chuliang@sina.com
+
+请注明出处

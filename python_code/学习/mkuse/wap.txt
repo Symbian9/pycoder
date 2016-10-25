@@ -1,0 +1,9 @@
+作者：無爱/诺八一
+
+s60v1专用的。类似urllib下载文件用的。
+pyd是由c/c++的代码编译的
+import wap
+gw="195.115.25.129"
+url=u"http://www.google.com/"
+file=u"E:\\index.html"
+wap.get_file(url, gw, file)

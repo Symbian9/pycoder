@@ -1,0 +1,64 @@
+作者：√ゞ絕配ぷ无恋℡
+
+应友友要求，开始讲解time模块，今天就讲一下strftime()涵数。
+import time
+time.strftime('%a')
+#显示当前星期数《简写》
+time.strftime('%A')
+#显示当前星期数《全称》
+time.strftime('%b')
+#显示当前月份数《简写》
+time.strftime('%B')
+#显示当前月份数《全称》
+time.strftime('%c')
+#显示当前完整时间日期
+time.strftime('%d')
+#显示当前号数(1-31)
+time.strftime('%H')
+#显示当前小时(1-12)
+time.strftime('%l')
+#显示当前小时(1-23)
+time.strftime('%j')
+#显示本年已过多少天(1-366)
+time.strftime('%m')
+#显示当月份数(01-12)
+time.strftime('%M')
+#显示当前分钟数(1-59)
+time.strftime('%p')
+#显示当前时间属于上午、或下午
+time.strftime('%S')
+#显示当前秒数(0-61)
+time.strftime('%U')
+#未知
+time.strftime('%w')
+#未知
+time.strftime('%W')
+#未知
+time.strftime('%x')
+#显示完整��前日期
+time.strftime('%X')
+#显示完整当前时间
+time.strftime('%Y')
+#显示当前年数(正常)
+time.strftime('%y')
+#显示当前年数(100年进一)
+time.strftime('%Y-%M-%H %X')
+#显示当前年月日时分秒(数字)
+#by 无恋
+续贴内容：非常抱歉，我已经尽力了，还有三个不确定的《未知》和一个不是很确定的。。我实在不清楚他是何意。如果有谁知道的，呵呵………分享一下哦。
+
+————————
+localtime()函数
+
+import appuifw
+import time
+that=time.localtime()
+def cn(x):return x.decode('utf8')
+year=that[0]#获取年份
+month=that[1]#获取月份
+date=that[2]#获取日期
+hour=that[3]#获取小时
+min=that[4]#获取分钟数
+sec=that[5]#获取秒数
+appuifw.note(cn("现在是%d年%d月%d日%d时%d分%d秒"%(year,month,date,hour,min,sec)),"conf")
+time.gmtime()#获取所有

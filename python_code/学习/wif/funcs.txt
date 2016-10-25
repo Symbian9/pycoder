@@ -1,0 +1,55 @@
+选择模块：
+------------------------------
+version_string()-版本"0.2.4"
+version_number()-版本号 24
+dec(text)-编码 utf-8=>Unicode
+enc(text)-编码 Unikode=>utf-8
+p()-传真空洞的原因，
+abort()-完成执行
+wait()-屏幕等待。(run=1)
+------------------------------
+wif.wait()
+------------------------------
+signal()-释放当前的屏幕等待 - wait (run=0)
+show()-显示图形。对象
+------------------------------
+scr=wif.Screen()
+wif.show(scr)
+------------------------------
+hide()-关闭
+------------------------------
+wif.hide()-关闭所有窗口，菜单和最新画面
+wif.hide('window')-关闭所有窗口
+wif.hide('menu')-关闭所有菜单
+------------------------------
+confirm(text[,title]),
+note(text[,title]),
+warning(text[,title]),
+error(text[,title])-这四个选项为弹出的对话框。第一个变量(text)-文本显示在窗口，第二变量(title)。有三种类型 'ok','no','cancel'
+------------------------------
+if wif.confirm('exit')=='ok':wif.abort()
+note('hello','title')
+这里是使用默认
+note:
+win=wif.Window()
+def note(t,title='Сообщение'):
+  win.clear()
+  win.color=[0xcccccc,0x0000ee]
+  win.text_color=0
+  win.title_color=0xcccccc
+  win.title=title
+  win.text(t,align='center')
+  show(win)
+您可以更改，并创建自己的Windows对话。
+------------------------------
+input([max])-窗口文字输入法。可选的参数指定的最大数量输入字符。
+------------------------------
+wif.show(wif.input())
+------------------------------
+fill(n,o)-填补了窗口。第一个选项-当前迭代，第二的最高值
+------------------------------
+for i in range(0,250):
+  wif.fill(i,250)
+------------------------------
+screenshot()-删除画面。
+------------------------------

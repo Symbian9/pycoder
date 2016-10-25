@@ -1,0 +1,25 @@
+作者：絃綵∑媩褋留念處
+
+fgimage.pyd是随显的模块，随显模块还有topwindow.py/_topwindow.pyd。不过后者有bug，就是一些机型只能在自带程序、py软件中随显（确切的说还有LCG公司的软件-_-）
+前者比较简单，后者的花样比较多。
+看示例……
+=======================
+import fgimage
+from graphics import *
+import e32
+#--------------------
+img=Image.new((70,17))
+#随显方框大小为→横70→竖17
+img.clear(0)
+#随显方框添充颜色
+img.text((3,15),u"-=Butfly=-", 0xffffff,u'CombinedChinesePlain16')
+#--------------------
+#隔开的内容实际上就是画个图
+fg=fgimage.FGImage()
+fg.set(5, 5, img._bitmapapi())
+#开始随显，把上面画的图的左上角贴在屏幕上(5,5)的位置
+print u"Wait for 3 seconds ..."
+e32.ao_sleep(3)
+fg.unset()
+#3秒后关闭
+print u"Finished."

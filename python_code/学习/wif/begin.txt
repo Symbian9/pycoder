@@ -1,0 +1,49 @@
+现在，我们开始探索wif模块：
+------------------------------
+在编程开始时第一步要做的就是引用wif
+首先引用wif模块:
+------------------------------
+import wif
+------------------------------
+一旦你引用wif ,就会载入wif框架！这时你就要充分了解模块的函数，变量和单一的语句来调节你所设想的动西！
+------------------------------
+函数：
+Screen-----屏幕
+Menu- ----菜单
+Window----在Windows对象（信息）
+Confirm----物体的窗口（对话）
+Imput-----在Windows对象（文本输入）
+Fill--------Windows （填料）
+Table---- 表格
+Checkbox- 复选框
+------------------------------
+变量：
+w----宽度显示
+h----高度显示
+run--如果等于1,执行0-结束。
+app- 对象屏幕 可借鉴当前
+scr--对象的屏幕（精简）
+conf-窗口设施（对话）
+inp--窗口设施（输入）
+fil---窗口设施（填料）
+------------------------------
+示例:
+version_string()
+version_number()
+dec(text)
+enc(text)
+p()
+abort()
+wait()
+signal()
+show()
+hide()
+confirm(text[,title])
+note(text[,title])
+warning(text[,title])
+error(text[,title])
+input([max])
+fill(n,o)
+screenshot()
+------------------------------
+更多描述请看有关章节

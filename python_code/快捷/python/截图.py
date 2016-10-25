@@ -1,0 +1,11 @@
+
+import graphics,appuifw
+
+def m(x):return x.decode('utf-8')
+
+img=graphics.screenshot()
+#截图
+img.save('e:\\screenshot.jpg')
+#将所截图像保存起来
+appuifw.note(m('截图成功'),'conf')
+

@@ -1,0 +1,5 @@
+作者：『輝』〞じcfy
+
+使用switchoff模块可以对手机进行重启，关机的操作。
+switchoff.Restart()重启，注意大小写！
+switchoff.Shutdown()关机，注意大小写！

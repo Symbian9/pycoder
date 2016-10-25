@@ -1,0 +1,1488 @@
+# emacs-mode: -*- python-*-
+import uitricks
+import appuifw
+import sysinfo
+import math
+import e32
+import sys
+import os
+from e32 import start_exe
+from key_tricks import *
+
+def ru(x):
+    return x.decode('utf-8')
+
+
+appuifw.app.screen = 'normal'
+appuifw.app.body = r = appuifw.Text()
+old_title = appuifw.app.title
+verson = u'v.3.3'
+nexter = u'~~~~~~~~~~\n\n'
+font0 = 'title'
+font1 = u'Sans MT 936_s60'
+
+def main_():
+    uitricks.set_text(ru('\xe8\x8f\x9c\xe5\x8d\x95'), EAknSoftkeyOptions)
+    uitricks.set_text(ru('\xe9\x80\x80\xe5\x87\xba'), EAknSoftkeyExit)
+    appuifw.app.exit_key_handler = exit
+    r.focus = False
+    r.font = font0
+    r.style = (appuifw.STYLE_BOLD | appuifw.HIGHLIGHT_SHADOW)
+    r.color = 16711680
+    r.set((ru('    \xe6\x8e\x8c\xe4\xb8\xad\xe6\x95\xb0\xe5\xad\xa6') + verson))
+    r.style = 1
+    r.font = font1
+    r.color = 240
+    r.add(ru('                                 \xe5\xa4\x9a\xe5\x8a\x9f\xe8\x83\xbd\xe7\x9a\x84\xe8\xae\xa1\xe7\xae\x97\xe5\x99\xa8'))
+    r.color = 0
+    r.add(ru('                              \xe5\xb0\x8f\xe5\xae\x87\xe6\xb1\x89\xe5\x8c\x96\xef\xbc\x8c\xe5\x8f\x82\xe7\x85\xa7\xe8\xae\xb8\xe6\x84\xbf3.2\xe6\xb1\x89\xe5\x8c\x96          \xe4\xb8\x8d\xe8\xb6\xb3\xe4\xb9\x8b\xe5\xa4\x84\xe8\xa7\x81\xe8\xb0\x85'))
+    r.color = 7367306
+    r.add(ru('\xe2\x80\xa8    \xe6\x9b\xb4\xe5\xa4\x9a\xe7\xb2\xbe\xe5\xbd\xa9\xe5\xb0\xbd\xe5\x9c\xa88zntx.com'))
+    r.set_pos(0)
+    appuifw.app.title = u'\u638c\u4e2d\u6570\u5b66'
+    appuifw.app.menu = [(ru('\xe8\xae\xa1\xe7\xae\x97\xe5\x99\xa8'),
+      kalkulator),
+     (ru('\xe8\xbd\xac\xe6\x8d\xa2\xe5\x99\xa8'),
+      konverter),
+     (ru('\xe4\xb8\x89\xe8\xa7\x92\xe8\xae\xa1\xe7\xae\x97'),
+      trigonometr),
+     (ru('\xe4\xb8\x89\xe8\xa7\x92\xe5\x85\xac\xe5\xbc\x8f'),
+      trigon),
+     (ru('\xe4\xbb\xa3\xe6\x95\xb0\xe5\x85\xac\xe5\xbc\x8f'),
+      fsu),
+     (ru('\xe5\x9b\xbe\xe8\xa1\xa8\xe5\x8a\x9f\xe8\x83\xbd'),
+      graph),
+     (ru('\xe5\xb8\xae\xe5\x8a\xa9'),
+      about),
+     (ru('\xe9\x80\x80\xe5\x87\xba'),
+      exit)]
+    r.color = 0
+
+
+
+def back():
+    global r
+    appuifw.app.body = r = appuifw.Text()
+    appuifw.app.screen = 'normal'
+    main_()
+
+
+
+def exit():
+    if (appuifw.query(ru('\xe7\xa1\xae\xe8\xae\xa4\xe9\x80\x80\xe5\x87\xba?'), 'query') == 1):
+        appuifw.app.set_exit()
+
+
+
+def about():
+    uitricks.set_text(ru('\xe8\x8f\x9c\xe5\x8d\x95'), EAknSoftkeyOptions)
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    appuifw.app.exit_key_handler = main_
+    r.focus = True
+    try:
+        r.set(open('C:/System/Apps/SmartMath/FAQ/about.qt').read())
+    except:
+        r.set(open('E:/System/Apps/SmartMath/FAQ/about.qt').read())
+    r.set_pos(0)
+    appuifw.app.title = ru('\xe5\xb8\xae\xe5\x8a\xa9')
+    appuifw.app.menu = [(ru('\xe5\x85\xb3\xe4\xba\x8e\xe8\xae\xa1\xe7\xae\x97\xe5\x99\xa8'),
+      help),
+     (ru('\xe5\x85\xb3\xe4\xba\x8e\xe5\x85\xac\xe5\xbc\x8f'),
+      help2),
+     (ru('\xe7\x89\x88\xe6\x9c\xac\xe5\x8e\x86\xe5\x8f\xb2'),
+      history),
+     (ru('\xe5\x88\xb6\xe4\xbd\x9c\xe4\xba\xba\xe5\x91\x98'),
+      thanks)]
+
+
+
+def help():
+    uitricks.set_text(ru(''), EAknSoftkeyOptions)
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    appuifw.app.exit_key_handler = about
+    try:
+        r.set(open('C:/System/Apps/SmartMath/FAQ/help.qt').read())
+    except:
+        r.set(open('E:/System/Apps/SmartMath/FAQ/help.qt').read())
+    r.set_pos(0)
+    appuifw.app.menu = []
+
+
+
+def help2():
+    uitricks.set_text(ru(''), EAknSoftkeyOptions)
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    appuifw.app.exit_key_handler = about
+    try:
+        r.set(open('C:/System/Apps/SmartMath/FAQ/help2.qt').read())
+    except:
+        r.set(open('E:/System/Apps/SmartMath/FAQ/help2.qt').read())
+    r.set_pos(0)
+    appuifw.app.menu = []
+
+
+
+def history():
+    uitricks.set_text(ru(''), EAknSoftkeyOptions)
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    appuifw.app.exit_key_handler = about
+    try:
+        r.set(open('C:/System/Apps/SmartMath/FAQ/history.qt').read())
+    except:
+        r.set(open('E:/System/Apps/SmartMath/FAQ/history.qt').read())
+    r.set_pos(0)
+    appuifw.app.menu = []
+
+
+
+def thanks():
+    uitricks.set_text(ru(''), EAknSoftkeyOptions)
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    appuifw.app.exit_key_handler = about
+    try:
+        r.set(open('C:/System/Apps/SmartMath/FAQ/thanks.qt').read())
+    except:
+        r.set(open('E:/System/Apps/SmartMath/FAQ/thanks.qt').read())
+    r.set_pos(0)
+    appuifw.app.menu = []
+
+
+class Plot:
+    __module__ = __name__
+
+    def __init__(s):
+        s.fx = u'sin(x)'
+        s.step = (img.size[0] / 10)
+        s.centre = [0,
+         0]
+        s.zoomrange = img.size[0]
+
+
+
+    def zoom(s):
+        from math import *
+        b = (s.centre[0] - ((img.size[0] / 2) / s.step))
+        for i in range((s.zoomrange * 2)):
+            b += (0.6 / s.step)
+            try:
+                x = b
+                y1 = eval(s.fx)
+            except:
+                appuifw.note(ru('\xe6\x97\xa0\xe6\x95\x88\xe7\x9a\x84\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x81'), 'error')
+                return 0
+            x += (0.6 / s.step)
+            y2 = eval(s.fx)
+            if (y2 > y1 > (y2 - 12) or y2 < y1 < (y2 + 12)):
+                img.line(((((img.size[0] / 2) - (s.centre[0] * s.step)) + (b * s.step)),
+                 (((img.size[1] / 2) + (s.centre[1] * s.step)) - (y1 * s.step)),
+                 (((img.size[0] / 2) - (s.centre[0] * s.step)) + (x * s.step)),
+                 (((img.size[1] / 2) + (s.centre[1] * s.step)) - (y2 * s.step))), 6340704, width=2)
+            else:
+                img.point(((((img.size[0] / 2) + (s.centre[0] * s.step)) + (b * s.step)),
+                 ((img.size[1] / 2) - (y1 * s.step))), 6340704, width=2)
+
+
+
+
+    def grid(s):
+        img.clear(15658734)
+        c = 13421823
+        for i in range(1, (int((s.zoomrange / s.step)) + 1)):
+            img.line((0,
+             ((img.size[1] / 2) - (i * s.step)),
+             img.size[0],
+             ((img.size[1] / 2) - (i * s.step))), c)
+            img.line((0,
+             ((img.size[1] / 2) + (i * s.step)),
+             img.size[0],
+             ((img.size[1] / 2) + (i * s.step))), c)
+            img.line((((img.size[0] / 2) - (i * s.step)),
+             0,
+             ((img.size[0] / 2) - (i * s.step)),
+             img.size[1]), c)
+            img.line((((img.size[0] / 2) + (i * s.step)),
+             0,
+             ((img.size[0] / 2) + (i * s.step)),
+             img.size[1]), c)
+
+        img.line((0,
+         (img.size[1] / 2),
+         img.size[0],
+         (img.size[1] / 2)), 0)
+        img.line(((img.size[0] / 2),
+         0,
+         (img.size[0] / 2),
+         img.size[1]), 0)
+        img.polygon((((img.size[0] / 2) - 4),
+         8,
+         ((img.size[0] / 2) + 4),
+         8,
+         (img.size[0] / 2),
+         0), 0, fill=0)
+        img.polygon(((img.size[0] - 8),
+         ((img.size[1] / 2) - 4),
+         (img.size[0] - 8),
+         ((img.size[1] / 2) + 4),
+         img.size[0],
+         (img.size[1] / 2)), 0, fill=0)
+        c = 14509670
+        if (int(s.centre[0]) == round(s.centre[0], 4)):
+            txt = ((u'(' + str(int(s.centre[0]))) + ';')
+            gr = 1
+        else:
+            txt = ((u'(' + str(round(s.centre[0], 4))) + ';')
+            gr = 0
+        if (int(s.centre[1]) == round(s.centre[1], 4)):
+            txt += (str(int(s.centre[1])) + ')')
+            if gr:
+                img.text((((img.size[0] / 2) + 2),
+                 ((img.size[1] / 2) + 10)), txt, c, u'Alp13')
+            else:
+                img.text((((img.size[0] / 2) + 2),
+                 ((img.size[1] / 2) + 2)), txt, c, u'Alp13')
+        else:
+            txt += (str(round(s.centre[1], 4)) + ')')
+            if gr:
+                img.text((((img.size[0] / 2) + 2),
+                 ((img.size[1] / 2) + 2)), txt, c, u'Alp13')
+            else:
+                img.text((((img.size[0] / 2) + 2),
+                 ((img.size[1] / 2) + 2)), txt, c, u'Alp13')
+        img.text((2,
+         ((img.size[1] / 2) - 5)), unicode(round((s.centre[0] - ((img.size[0] / 2) / s.step)), 4)), c, u'Alp13')
+        txt = unicode(round((s.centre[0] + ((img.size[0] / 2) / s.step)), 4))
+        img.text(((img.size[0] - (len(txt) * 6)),
+         ((img.size[1] / 2) - 5)), txt, c, u'Alp13')
+        txt = unicode(round((s.centre[1] + ((img.size[1] / 2) / s.step)), 4))
+        img.text((((img.size[0] / 2) + 5),
+         ((img.size[0] / 2) / 10)), txt, c, u'Alp13')
+        txt = unicode(round((s.centre[1] - ((img.size[1] / 2) / s.step)), 4))
+        img.text(((((img.size[0] / 2) + 27) - (len(txt) * 6)),
+         (img.size[1] - 2)), txt, c, u'Alp13')
+
+
+
+    def zin(s):
+        s.step *= 2
+        s.grid()
+        s.zoom()
+        handl(())
+
+
+
+    def zout(s):
+        if (s.step > 5):
+            s.step /= 2
+            s.grid()
+            s.zoom()
+            handl(())
+
+
+
+    def pt(s):
+        if appuifw.query(ru('\xe8\xaf\xb7\xe5\x85\x88\xe8\xbe\x93\xe5\x85\xa5\xe5\x87\xbd\xe6\x95\xb0\xe7\xa8\x8d\xe5\x80\x99\xe5\x88\x9b\xe5\xbb\xba\xe5\x9b\xbe\xe8\xa1\xa8'), 'query'):
+            s.grid()
+        fx0 = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\x87\xbd\xe6\x95\xb0'), 'text', s.fx)
+        if fx0:
+            s.fx = fx0
+        else:
+            return 
+        s.zoom()
+
+
+
+
+def graph():
+    global r
+    global img
+    import appuifw
+    import e32
+    from graphics import Image
+    from sysinfo import display_pixels as disp
+    img = None
+
+    def handl(rect):
+        if img:
+            r.blit(img)
+
+
+
+    def sv():
+        img.save('e:\\Function.png', compression='best')
+        appuifw.note(ru('\xd0\xa1\xd0\xbe\xd1\x85\xd1\x80\xd0\xb0\xd0\xbd\xd0\xb5\xd0\xbd\xd0\xbe'), 'conf')
+
+
+    appuifw.app.screen = 'full'
+    appuifw.app.body = r = appuifw.Canvas(redraw_callback=handl)
+    img = Image.new(disp())
+    plot = Plot()
+    plot.grid()
+    handl(())
+    appuifw.app.menu = [(ru('\xe5\x88\x9b\xe5\xbb\xba\xe5\x9b\xbe\xe8\xa1\xa8'),
+      plot.pt)]
+    appuifw.app.exit_key_handler = back
+
+
+
+def fsu():
+    global disp
+    global r
+    import graphics
+
+    def kvadrat():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\FSU\\m1'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\FSU\\m1'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def kub():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\FSU\\m2'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\FSU\\m2'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def lubaya():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\FSU\\m3'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\FSU\\m3'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def menu_help():
+        if (disp == (176,
+         208)):
+            try:
+                gde = 'C:\\System\\Apps\\SmartMath\\Images\\Main\\mainfsu1'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+            except:
+                gde = 'E:\\System\\Apps\\SmartMath\\Images\\Main\\mainfsu1'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+        elif (disp == (240,
+         320)):
+            try:
+                gde = 'C:\\System\\Apps\\SmartMath\\Images\\Main\\mainfsu2'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+            except:
+                gde = 'E:\\System\\Apps\\SmartMath\\Images\\Main\\mainfsu2'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+        elif (disp == (352,
+         416)):
+            try:
+                gde = 'C:\\System\\Apps\\SmartMath\\Images\\Main\\mainfsu3'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+            except:
+                gde = 'E:\\System\\Apps\\SmartMath\\Images\\Main\\mainfsu3'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+        else:
+            uitricks.set_text(ru(''), EAknSoftkeyOptions)
+            uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+            appuifw.app.screen = 'normal'
+            r.text((15,
+             35), ru('\xe4\xbd\xa0\xe7\x9a\x84\xe5\xb1\x8f\xe5\xb9\x95'), 983040, font=u'alp13')
+            r.text((15,
+             45), ru('\xe4\xb8\x8d\xe6\x94\xaf\xe6\x8c\x81\xe7\x9b\xae\xe5\xbd\x95\xe3\x80\x82'), 983040, font=u'alp13')
+            r.text((15,
+             55), ru('\xe6\x98\xaf\xe6\x8c\x87\xe5\x8f\x91\xe5\xb1\x95\xe3\x80\x82'), 983040, font=u'alp13')
+
+
+    appuifw.app.menu = [(ru('\xe5\xb9\xb3\xe6\x96\xb9\xe5\x85\xac\xe5\xbc\x8f'),
+      kvadrat),
+     (ru('\xe7\xab\x8b\xe6\x96\xb9\xe5\x85\xac\xe5\xbc\x8f'),
+      kub),
+     (ru('\xe5\xb8\xb8\xe8\xa7\x81\xe5\x85\xac\xe5\xbc\x8f'),
+      lubaya)]
+    appuifw.app.screen = 'full'
+    appuifw.app.body = r = appuifw.Canvas()
+    disp = sysinfo.display_pixels()
+    menu_help()
+    appuifw.app.exit_key_handler = back
+
+
+
+def trigon():
+    global disp
+    global r
+    import graphics
+    appuifw.app.screen = 'full'
+    appuifw.app.body = r = appuifw.Canvas()
+    disp = sysinfo.display_pixels()
+
+    def m1():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m1'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m1'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m2():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m2'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m2'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m3():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m3'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m3'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m4():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m4'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m4'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m5():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m5'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m5'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m6():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m6'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m6'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m7():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m7'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m7'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m8():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m8'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m8'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def m9():
+        try:
+            gde = 'C:\\System\\Apps\\SmartMath\\Images\\Trigon\\m9'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+        except:
+            gde = 'E:\\System\\Apps\\SmartMath\\Images\\Trigon\\m9'
+            kar = graphics.Image.open(gde)
+            r.blit(kar)
+
+
+
+    def menu_help():
+        if (disp == (176,
+         208)):
+            try:
+                gde = 'C:\\System\\Apps\\SmartMath\\Images\\Main\\main1'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+            except:
+                gde = 'E:\\System\\Apps\\SmartMath\\Images\\Main\\main1'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+        elif (disp == (240,
+         320)):
+            try:
+                gde = 'C:\\System\\Apps\\SmartMath\\Images\\Main\\main2'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+            except:
+                gde = 'E:\\System\\Apps\\SmartMath\\Images\\Main\\main2'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+        elif (disp == (352,
+         416)):
+            try:
+                gde = 'C:\\System\\Apps\\SmartMath\\Images\\Main\\main3'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+            except:
+                gde = 'E:\\System\\Apps\\SmartMath\\Images\\Main\\main3'
+                kar = graphics.Image.open(gde)
+                r.blit(kar)
+        else:
+            uitricks.set_text(ru(''), EAknSoftkeyOptions)
+            uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+            appuifw.app.screen = 'normal'
+            r.text((15,
+             35), ru('\xe4\xbd\xa0\xe7\x9a\x84\xe5\xb1\x8f\xe5\xb9\x95'), 983040, font=u'alp13')
+            r.text((15,
+             45), ru('\xe4\xb8\x8d\xe6\x94\xaf\xe6\x8c\x81\xe7\x9b\xae\xe5\xbd\x95\xe3\x80\x82'), 983040, font=u'alp13')
+            r.text((15,
+             55), ru('\xe6\x98\xaf\xe6\x8c\x87\xe5\x8f\x91\xe5\xb1\x95\xe3\x80\x82'), 983040, font=u'alp13')
+        appuifw.app.menu = [(ru('\xe5\x92\x8c\xe5\xb7\xae\xe5\x8c\x96\xe7\xa7\xaf\xe5\x85\xac\xe5\xbc\x8f'),
+          m1),
+         (ru('\xe4\xb8\x89\xe8\xa7\x92\xe5\x85\xac\xe5\xbc\x8f\xe9\x9a\xbe\xe7\x82\xb9'),
+          ((ru('\xe5\x80\x8d\xe8\xa7\x92\xe5\x85\xac\xe5\xbc\x8f'),
+            m7),
+           (ru('\xe5\x8d\x8a\xe8\xa7\x92\xe5\x85\xac\xe5\xbc\x8f'),
+            m8),
+           (ru('\xe4\xb8\x89\xe5\x80\x8d\xe8\xa7\x92\xe5\x85\xac\xe5\xbc\x8f'),
+            m9))),
+         (ru('\xe7\x89\xb9\xe6\xae\x8a\xe5\x85\xac\xe5\xbc\x8f(\xe4\xb8\x80)'),
+          ((ru('\xe7\xac\xac1\xe9\x83\xa8\xe5\x88\x86'),
+            m2),
+           (ru('\xe7\xac\xac2\xe9\x83\xa8\xe5\x88\x86'),
+            m3),
+           (ru('\xe7\xac\xac3\xe9\x83\xa8\xe5\x88\x86'),
+            m4))),
+         (ru('\xe7\x89\xb9\xe6\xae\x8a\xe5\x85\xac\xe5\xbc\x8f(\xe4\xba\x8c)'),
+          m5),
+         (ru('\xe5\x9f\xba\xe6\x9c\xac\xe5\x85\xac\xe5\xbc\x8f'),
+          m6)]
+
+
+    menu_help()
+    appuifw.app.exit_key_handler = back
+
+
+
+def plus():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe5\x8a\xa0\xe6\x95\xb0'), 'float')
+    b = appuifw.query(ru('\xe8\xaf\xb7\xe5\x86\x8d\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe5\x8a\xa0\xe6\x95\xb0'), 'float')
+    p = (a + b)
+    r.add(ru(((((str(a) + str(' + ')) + str(b)) + str(' = ')) + str(p))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def minus():
+    c = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa2\xab\xe5\x87\x8f\xe6\x95\xb0'), 'float')
+    d = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\x87\x8f\xe6\x95\xb0'), 'float')
+    m = (c - d)
+    r.add(ru(((((str(c) + str(' - ')) + str(d)) + str(' = ')) + str(m))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def umnoj():
+    e = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\xac\xac\xe4\xb8\x80\xe4\xb9\x98\xe6\x95\xb0'), 'float')
+    f = appuifw.query(ru('\xe8\xaf\xb7\xe5\x86\x8d\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe4\xb9\x98\xe7\xb4\xa0'), 'float')
+    u = (e * f)
+    r.add(ru(((((str(e) + str(' * ')) + str(f)) + str(' = ')) + str(u))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def delenie():
+    g = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa2\xab\xe9\x99\xa4\xe6\x95\xb0'), 'float')
+    h = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe9\x99\xa4\xe6\x95\xb0'), 'float')
+    if (h == 0):
+        appuifw.note(ru('\xe5\x87\xba\xe9\x94\x99\xef\xbc\x9a\r\n\xe9\x99\xa4\xe6\x95\xb0\xe4\xb8\x8d\xe8\x83\xbd\xe4\xb8\xba\xe9\x9b\xb6\xef\xbc\x81'), 'error')
+    else:
+        d = (g / h)
+        r.add(ru(((((str(g) + str(' : ')) + str(h)) + str(' = ')) + str(d))))
+        r.color = 7367306
+        r.add((ru('\n\n') + nexter))
+        r.color = 0
+
+
+
+def stepen():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\xba\x95\xe6\x95\xb0\xef\xbc\x9a'), 'float')
+    b = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe6\x8c\x87\xe6\x95\xb0:'), 'float')
+    s = (a ** b)
+    r.add(ru((((((str(a) + str('\xe7\x9a\x84')) + str(b)) + str('\xe6\xac\xa1\xe6\x96\xb9')) + str(' = ')) + str(s))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def procentpl():
+    z = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0'), 'float')
+    y = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5( )%'), 'float')
+    w = (z + ((z * y) / 100))
+    r.add(ru((((((str(z) + str(' + ')) + str(y)) + str('%\xef\xbc\x88\xe7\xac\xac\xe4\xb8\x80\xe6\xac\xa1\xe8\xbe\x93\xe7\x9a\x84\xe6\x95\xb0/1\xef\xbc\x89')) + str(' = ')) + str(w))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def procentmin():
+    z = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0'), 'float')
+    y = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5( )%'), 'float')
+    w = (z - ((z * y) / 100))
+    r.add(ru((((((str(z) + str(' - ')) + str(y)) + str('%\xef\xbc\x88\xe7\xac\xac\xe4\xb8\x80\xe6\xac\xa1\xe8\xbe\x93\xe7\x9a\x84\xe6\x95\xb0/1\xef\xbc\x89')) + str(' = ')) + str(w))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def procent():
+    z = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0'), 'float')
+    y = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5( )%'), 'float')
+    w = ((z * y) / 100)
+    r.add(ru((((((str(y) + str('%\xef\xbc\x88\xe7\xac\xac\xe4\xb8\x80\xe6\xac\xa1\xe8\xbe\x93\xe7\x9a\x84\xe6\x95\xb0/1\xef\xbc\x89')) + str(' \xd0\xbe\xd1\x82 ')) + str(z)) + str(' = ')) + str(w))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def koren():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa2\xab\xe5\xbc\x80\xe6\xa0\xb9\xe6\x95\xb0\xef\xbc\x9a'), 'float')
+    b = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\xbc\x80\xe6\xa0\xb9\xe6\xac\xa1\xe6\x95\xb0\xef\xbc\x9a'), 'float')
+    c = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe6\xac\xa1\xe6\x96\xb9\xe6\x95\xb0'), 'float')
+    k = ((a ** c) ** (1 / b))
+    r.add(ru(((((((str('\xe7\x9b\xb8\xe5\xbd\x93\xe4\xba\x8e\xe6\x8a\x8a') + str((a ** c))) + str('\xe5\xbc\x80')) + str(b)) + str('\xe6\xac\xa1\xe6\x96\xb9 ')) + str(' = ')) + str(k))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def kubi():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0\xef\xbc\x9a'), 'float')
+    k = (a ** (1.0 / 3.0))
+    r.add(ru(((((str('\xe2\x88\x9a') + str(a)) + str('\xe7\x9a\x84\xe7\xab\x8b\xe6\x96\xb9\xe6\xa0\xb9')) + str(' = ')) + str(k))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def kvd():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0\xef\xbc\x9a'), 'float')
+    k = (a ** 0.5)
+    r.add(ru(((((str('\xe2\x88\x9a') + str(a)) + str('\xe7\x9a\x84\xe5\xb9\xb3\xe6\x96\xb9\xe6\xa0\xb9')) + str(' = ')) + str(k))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def cv():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5X\xe5\xb9\xb3\xe6\x96\xb9\xe7\x9a\x84\xe7\xb3\xbb\xe6\x95\xb0'), 'float')
+    if (a == 0):
+        appuifw.note(ru('\xe8\xaf\xb7\xe5\xae\x9a\xe4\xb9\x89\xe7\xb3\xbb\xe6\x95\xb0\xef\xbc\x8c\xe5\x90\xa6\xe5\x88\x99\xe6\x97\xa0\xe6\xb3\x95\xe7\xbb\xa7\xe7\xbb\xad'))
+    else:
+        b = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa52XX\xe7\x9a\x84\xe7\xb3\xbb\xe6\x95\xb0'), 'float')
+        c = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5Y\xe5\xb9\xb3\xe6\x96\xb9\xe7\x9a\x84\xe7\xb3\xbb\xe6\x95\xb0'), 'float')
+        d = ((b * b) - ((4 * a) * c))
+        if (d > 0):
+            x1 = ((-b - (d ** 0.5)) / (2 * a))
+            x2 = ((-b + (d ** 0.5)) / (2 * a))
+            r.add(ru((((((((str('D = ') + str(d)) + str('\nsqrt(D) = ')) + str((d ** 0.5))) + str('\n\nx1 = ')) + str(x1)) + str('\nx2 = ')) + str(x2))))
+            r.color = 7367306
+            r.add((ru('\n\n') + nexter))
+            r.color = 0
+        elif (d == 0):
+            x = (-b / (2 * a))
+            r.add(ru((((((str('D = ') + str(d)) + str('\nsqrt(D) = ')) + str((d ** 0.5))) + str('\nx = ')) + str(x))))
+            r.color = 7367306
+            r.add((ru('\n\n') + nexter))
+            r.color = 0
+        else:
+            r.add(ru(((str('D = ') + str(d)) + str('\n\n\xe6\x97\xa0\xe6\xa0\xb9\n'))))
+            vx = (-b / (2 * a))
+            vy = ((((a * vx) * vx) + (b * vx)) + c)
+            r.add(ru((((('\n\n\xe9\xa1\xb6\xe7\xab\xaf\xe6\x8a\x9b\xe7\x89\xa9\xe7\xba\xbf:\n' + 'x = ') + str(vx)) + '\ny = ') + str(vy))))
+            r.color = 7367306
+            r.add((ru('\n\n') + nexter))
+            r.color = 0
+
+
+
+def geop():
+    b = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\x9a\x84\xe7\xac\xac\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0b'), 'float')
+    q = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\xba\x95\xe6\x95\xb0q'), 'float')
+    n = appuifw.query(ru('\xe8\xbe\x93\xe5\x85\xa5\xe6\x95\xb0\xe5\xad\x97\xe4\xb8\xaa\xe6\x95\xb0n'), 'float')
+    g = (b * (q ** (n - 1)))
+    r.add(ru(((((str(n) + '\xe4\xb8\xaa\xe6\x95\xb0\xe4\xbb\xa5') + str(q)) + '\xe4\xb8\xba\xe5\xba\x95\xe7\x9a\x84\xe7\xba\xa7\xe6\x95\xb0g=b\xe4\xb9\x98q\xe7\x9a\x84n-1\xe6\xac\xa1\xe6\x96\xb9=') + str(g))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def arip():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\x9a\x84\xe7\xac\xac\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0a'), 'float')
+    d = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\xb7\xae\xe5\xbc\x82\xe7\xba\xa7\xe6\x95\xb0d'), 'float')
+    w = appuifw.query(ru('\xe8\xbe\x93\xe5\x85\xa5\xe6\x95\xb0\xe5\xad\x97\xe4\xb8\xaa\xe6\x95\xb0w'), 'float')
+    c = (a + ((w - 1.0) * d))
+    r.add(ru(((((str(w) + str('\xe4\xb8\xaa\xe6\x95\xb0\xe4\xb8\x8e')) + str(d)) + str('\xe5\xa4\x9f\xe6\x88\x90\xe7\xad\x89\xe5\xbc\x8f c=(a+(w-1)d)=')) + str(c))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def aripsum():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\x9a\x84\xe7\xac\xac\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0'), 'float')
+    d = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\xb7\xae\xe5\xbc\x82\xe7\xba\xa7\xe6\x95\xb0'), 'float')
+    w = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\x9a\x84\xe6\x88\x90\xe5\x91\x98\xe6\x95\xb0\xe7\x9b\xae\xe7\xba\xa7\xe6\x95\xb0'), 'float')
+    c = ((((2.0 * a) + (d * (w - 1))) * w) / 2.0)
+    r.add(ru((((((str('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe6\x95\xb0\xe5\xad\x97\xe7\x9a\x84\xe4\xb8\xaa\xe6\x95\xb0') + str(w)) + str('\xe6\x88\x90\xe5\x91\x98\xe7\xae\x97\xe6\x9c\xaf\xe7\xba\xa7\xe6\x95\xb0\xe4\xb8\x8e\xe5\xb7\xae\xe5\xbc\x82')) + str(d)) + ' = ') + str(c))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def geopsum():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\x9a\x84\xe7\xac\xac\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0'), 'float')
+    d = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe5\x88\x86\xe6\xaf\x8d\xe7\xba\xa7\xe6\x95\xb0'), 'float')
+    w = appuifw.query(ru('\xe8\xbe\x93\xe5\x85\xa5\xe7\x9a\x84\xe6\x88\x90\xe5\x91\x98\xe6\x95\xb0\xe7\x9b\xae\xe7\xba\xa7\xe6\x95\xb0'), 'float')
+    c = ((a * (1 - (d ** w))) / (1 - d))
+    r.add(ru((((((str('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe6\x95\xb0\xe5\xad\x97\xe7\x9a\x84\xe4\xb8\xaa\xe6\x95\xb0') + str(w)) + str('\xe6\x88\x90\xe5\x91\x98\xe5\x87\xa0\xe4\xbd\x95\xe7\xba\xa7\xe6\x95\xb0\xe4\xb8\x8e\xe5\x88\x86\xe6\xaf\x8d')) + str(d)) + ' = ') + str(c))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def log1():
+    cl = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5ln(x)\xe4\xb8\xad\xe7\x9a\x84x'), 'float')
+    l = (math.log(cl) * 1.0)
+    r.add(ru((((str('ln(x)') + str(cl)) + str('\xe7\xad\x89\xe4\xba\x8e')) + str(l))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def log2():
+    ba = appuifw.query(ru('\xe8\xbe\x93\xe5\x85\xa5log(x)\xe4\xb8\xad\xe7\x9a\x84x'), 'float')
+    lo = math.log10(ba)
+    r.add(ru((((str('log') + str(ba)) + str('\xe7\xad\x89\xe4\xba\x8e')) + str(lo))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def acosin():
+    c1 = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5arccos(x)\xe7\x9a\x84\xe6\x95\xb0\xe5\x80\xbc'), 'float')
+    pi = math.pi
+    acg = (math.acos(c1) * (180 / pi))
+    acr = math.acos(c1)
+    r.add(ru((((((str('arccos') + str(c1)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(acr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(acg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def asinu():
+    s1 = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5arcsin(x)\xe7\x9a\x84\xe6\x95\xb0\xe5\x80\xbc'), 'float')
+    pi = math.pi
+    asg = (math.asin(s1) * (180 / pi))
+    asr = math.asin(s1)
+    r.add(ru((((((str('arcsin') + str(s1)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(asr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(asg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def atang():
+    t1 = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5arctan(x)\xe7\x9a\x84\xe6\x95\xb0\xe5\x80\xbc'), 'float')
+    pi = math.pi
+    atg = (math.atan(t1) * (180 / pi))
+    atr = math.atan(t1)
+    r.add(ru((((((str('arctan') + str(t1)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(atr)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(atg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def acotang():
+    ct1 = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5arccot(x)\xe7\x9a\x84\xe6\x95\xb0\xe5\x80\xbc'), 'float')
+    pi = math.pi
+    actg = ((1 / math.atan(ct1)) * (180 / pi))
+    actr = (1 / math.atan(ct1))
+    r.add(ru((((((str('arccot') + str(ct1)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(actr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(actg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def cosin():
+    c = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa7\x92\xe5\xba\xa6\xe6\x95\xb0'), 'float')
+    pi = math.pi
+    cg = math.cos(((pi / 180) * c))
+    cr = math.cos(c)
+    r.add(ru((((((str('cos') + str(c)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(cr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(cg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def sinu():
+    s = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa7\x92\xe5\xba\xa6\xe6\x95\xb0'), 'float')
+    pi = math.pi
+    sg = math.sin(((pi / 180) * s))
+    sr = math.sin(s)
+    r.add(ru((((((str('sin') + str(s)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(sr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(sg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def tang():
+    t = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa7\x92\xe5\xba\xa6\xe6\x95\xb0'), 'float')
+    pi = math.pi
+    tg = math.tan(((pi / 180) * t))
+    tr = math.tan(t)
+    r.add(ru((((((str('tan') + str(t)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(tr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(tg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def cotang():
+    ct = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xa7\x92\xe5\xba\xa6\xe6\x95\xb0'), 'float')
+    pi = math.pi
+    ctg = (1 / math.tan(((pi / 180) * ct)))
+    ctr = (1 / math.tan(ct))
+    r.add(ru((((((str('cot ') + str(ct)) + str('\n  \xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6= ')) + str(ctr)) + str('\n  \xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6= ')) + str(ctg))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vgr():
+    unc = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe7\x9b\x8e\xe5\x8f\xb8'), 'float')
+    gr = (unc * 28.3)
+    r.add(ru((((str(unc) + str('\xe7\x9b\x8e\xe5\x8f\xb8=')) + str(gr)) + str('\xe5\x85\x8b'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vunc():
+    gr = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x85\x8b'), 'float')
+    unc = (gr / 28.3)
+    r.add(ru((((str(gr) + str('\xe5\x85\x8b=')) + str(unc)) + str('\xe7\x9b\x8e\xe5\x8f\xb8'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vkgr():
+    pound = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe7\xa3\x85'), 'float')
+    k = (pound * 0.454)
+    r.add(ru((((str(pound) + str('\xe7\xa3\x85=')) + str(k)) + str('\xe5\x8d\x83\xe5\x85\x8b'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vfunt():
+    k = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x8d\x83\xe5\x85\x8b'), 'float')
+    pound = (k / 0.454)
+    r.add(ru((((str(k) + str('\xe5\x8d\x83\xe5\x85\x8b=')) + str(pound)) + str('\xe7\xa3\x85'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vgal():
+    lit = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x8d\x87'), 'float')
+    gal = (lit / 4.54609)
+    kv = (lit / 1.1361)
+    r.add(ru((((((str(lit) + str('\xe5\x8d\x87 =')) + str(gal)) + str('\xe5\x8a\xa0\xe4\xbb\x91=')) + str(kv)) + str('\xe5\xa4\xb8\xe8\x84\xb1'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vlitg():
+    gal = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x8a\xa0\xe4\xbb\x91'), 'float')
+    litg = (gal * 4.54609)
+    r.add(ru((((str(gal) + str('\xe5\x8a\xa0\xe4\xbb\x91')) + str(litg)) + str('\xe5\x8d\x87'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vbar():
+    lit = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x85\xac\xe5\x8d\x87'), 'float')
+    barn = (lit / 158.987)
+    bar = (lit / 115.627)
+    r.add(ru((((((str(lit) + str('\xe5\x85\xac\xe5\x8d\x87=')) + str(bar)) + str('\xe6\xa1\xb6')) + str(barn)) + str('\xe6\xa1\xb6'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vlit():
+    bar = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe6\xa1\xb6'), 'float')
+    vlit = (bar * 115.627)
+    r.add(ru((((str(bar) + str('\xe6\xa1\xb6=')) + str(vlit)) + str('\xe5\x85\xac\xe5\x8d\x87'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def celsiy():
+    temp = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe6\x91\x84\xe6\xb0\x8f'), 'float')
+    celsiy = (((9.0 / 5.0) * temp) + 32)
+    celsiy1 = (temp + 273)
+    r.add(ru((((((str(temp) + str('\xe6\x91\x84\xe6\xb0\x8f\xe5\xba\xa6=')) + str(celsiy)) + str('\xe5\x8d\x8e\xe6\xb0\x8f\xe5\xba\xa6=')) + str(celsiy1)) + str('\xe5\xbc\x80\xe5\xb0\x94\xe6\x96\x87'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def kalv():
+    temp = appuifw.query(ru('\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\xbc\x80\xe5\xb0\x94\xe6\x96\x87'), 'float')
+    cel = (temp - 273)
+    far = (((9.0 / 5.0) * cel) + 32)
+    r.add(ru((((((str(temp) + str('\xe5\xbc\x80\xe5\xb0\x94\xe6\x96\x87=')) + str(cel)) + str('\xe6\x91\x84\xe6\xb0\x8f\xe5\xba\xa6=')) + str(far)) + str('\xe5\x8d\x8e\xe6\xb0\x8f\xe5\xba\xa6'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def faren():
+    temp = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x8d\x8e\xe6\xb0\x8f'), 'float')
+    cels = (((temp - 32) * 5) / 9)
+    kalv = (cels + 273)
+    r.add(ru((((((str(temp) + str('\xe5\x8d\x8e\xe6\xb0\x8f\xe5\xba\xa6=')) + str(cels)) + str('\xe6\x91\x84\xe6\xb0\x8f\xe5\xba\xa6=')) + str(kalv)) + str('\xe5\xbc\x80\xe5\xb0\x94\xe6\x96\x87'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vmil():
+    km = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x85\xac\xe9\x87\x8c'), 'float')
+    vmil = (km / 1.60934)
+    r.add(ru((((str(km) + str('\xe5\x85\xac\xe9\x87\x8c=')) + str(vmil)) + str('\xe8\x8b\xb1\xe9\x87\x8c'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vkm():
+    mil = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe8\x8b\xb1\xe9\x87\x8c'), 'float')
+    vkm = (mil * 1.60934)
+    r.add(ru((((str(mil) + str('\xe8\x8b\xb1\xe9\x87\x8c=')) + str(vkm)) + str('\xe5\x85\xac\xe9\x87\x8c'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vyd():
+    met = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe7\xb1\xb3'), 'float')
+    vyd = (met / 0.9144)
+    vfut = (met / 0.3048)
+    dm = (met * 10)
+    sm = (met * 100)
+    mm = (met * 1000)
+    r.add(ru((((((((((((str(met) + str('\xe7\xb1\xb3=')) + str(vyd)) + str('\xe7\xa0\x81=')) + str(vfut)) + str('\xe8\x8b\xb1\xe5\xb0\xba=')) + str(dm)) + str('\xe5\x88\x86\xe7\xb1\xb3=')) + str(sm)) + str('\xe5\x8e\x98\xe7\xb1\xb3=')) + str(mm)) + str('\xe6\xaf\xab\xe7\xb1\xb3'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vmet():
+    yd = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe7\xa0\x81'), 'float')
+    vmet = (yd * 0.9144)
+    vsm = (yd * 0.3048)
+    r.add(ru((((((str(yd) + str('\xe7\xa0\x81=')) + str(vmet)) + str('\xe7\xb1\xb3=')) + str(vsm)) + str('*10\xe8\x8b\xb1\xe5\xb0\xba'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vdy():
+    cm = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe5\x8e\x98\xe7\xb1\xb3'), 'float')
+    vdy = (cm / 2.54)
+    r.add(ru((((str(cm) + str('\xe5\x8e\x98\xe7\xb1\xb3=')) + str(vdy)) + str('\xe8\x8b\xb1\xe5\xaf\xb8'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def vcm():
+    dy = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe8\xbd\xac\xe6\x8d\xa2\xe5\xa4\x9a\xe5\xb0\x91\xe8\x8b\xb1\xe5\xaf\xb8'), 'float')
+    vcm = (dy * 2.54)
+    r.add(ru((((str(dy) + str('\xe8\x8b\xb1\xe5\xaf\xb8=')) + str(vcm)) + str('\xe5\x8e\x98\xe7\xb1\xb3'))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def expon():
+    ex = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\xa8\x8b\xe5\xba\xa6\xe6\x8c\x87\xe6\x95\xb0'), 'float')
+    es = math.exp(ex)
+    r.add(ru((((str('\xe6\x8c\x87\xe7\xa4\xba\xe5\x8a\x9f\xe8\x83\xbd') + str(ex)) + str(' = ')) + str(es))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def sis():
+    menu = appuifw.popup_menu([ru('16\xe8\xbf\x9b\xe5\x88\xb6 - \xe5\x8d\x81\xe8\xbf\x9b\xe5\x88\xb6'),
+     ru('\xe5\x8d\x81\xe8\xbf\x9b\xe5\x88\xb6 - 16\xe8\xbf\x9b\xe5\x88\xb6'),
+     ru('\xe5\x85\xab\xe8\xbf\x9b\xe5\x88\xb6 - \xe5\x8d\x81\xe8\xbf\x9b\xe5\x88\xb6'),
+     ru('\xe5\x8d\x81\xe8\xbf\x9b\xe5\x88\xb6 - \xe5\x85\xab\xe8\xbf\x9b\xe5\x88\xb6'),
+     ru('\xe8\xbf\x94\xe5\x9b\x9e')], ru('\xe8\xbf\x9b\xe5\x88\xb6\xe8\xbd\xac\xe6\x8d\xa2\xef\xbc\x9a'))
+    if (menu == 0):
+        a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa16\xe8\xbf\x9b\xe5\x88\xb6\xe6\x95\xb0'), 'text')
+        b = int(a, 16)
+        r.add((((unicode(a) + ru(' =  ')) + unicode(b)) + ru('\n\n')))
+    if (menu == 1):
+        a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe5\x8d\x81\xe8\xbf\x9b\xe5\x88\xb6\xe6\x95\xb0'), 'number')
+        b = hex(a)
+        r.add((((str(a) + ru(' = ')) + str(b)) + ru('\n\n')))
+    if (menu == 2):
+        a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe5\x85\xab\xe8\xbf\x9b\xe5\x88\xb6\xe6\x95\xb0'), 'text')
+        b = int(a, 8)
+        r.add((((unicode(a) + ru(' = ')) + unicode(b)) + ru('\n\n')))
+    if (menu == 3):
+        a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe5\x8d\x81\xe8\xbf\x9b\xe5\x88\xb6\xe6\x95\xb0'), 'number')
+        b = oct(a)
+        r.add((((str(a) + ru(' = ')) + str(b)) + ru('\n\n')))
+    if (nenu == 4):
+        r.add(str(dec2bin(562)))
+
+
+
+def dec2bin(x):
+    if (x < 0):
+        return None
+    nums = []
+    total = ''
+    while 1:
+        if (x in [1,
+         0]):
+            nums.append(x)
+            break
+        nums.append((x % 2))
+        x = (x / 2)
+
+    nums.reverse()
+    for i in nums:
+        total += str(i)
+
+    return int(total)
+
+
+
+def fact():
+    n = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe4\xb8\x80\xe4\xb8\xaa\xe6\x95\xb0'), 'number')
+    r.add((((ru(str('\xe9\x98\xb6\xe4\xb9\x98\xe6\x95\xb0')) + str(n)) + str(' = ')) + str(fact1(n))))
+    r.color = 7367306
+    r.add((ru('\n\n') + nexter))
+    r.color = 0
+
+
+
+def fact1(n):
+    if (n < 1):
+        return 1
+    return (n * fact1((n - 1.0)))
+
+
+
+def sin():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5sin(x)\xe7\x9a\x84\xe8\xa7\x92\xe5\xba\xa6'), 'float')
+    if (a == 30):
+        r.add(ru('sin 30\xcb\x9a =\n P/6\n 1/2\n\n'))
+    if (a == 45):
+        r.add(ru('sin 45\xcb\x9a =\n P/4\n \xe2\x88\x9a2/2\n\n'))
+    if (a == 60):
+        r.add(ru('sin 60\xcb\x9a =\n P/3\n \xe2\x88\x9a3/2\n\n'))
+    if (a == 90):
+        r.add(ru('sin 90\xcb\x9a =\n P/2\n 1\n\n'))
+    if (a == 120):
+        r.add(ru('sin 120\xcb\x9a =\n 2P/3\n \xe2\x88\x9a3/2\n\n'))
+    if (a == 135):
+        r.add(ru('sin 135\xcb\x9a =\n 3P/4\n \xe2\x88\x9a2/2\n\n'))
+    if (a == 150):
+        r.add(ru('sin 150\xcb\x9a =\n 5P/6\n 1/2\n\n'))
+    if (a == 180):
+        r.add(ru('sin 180\xcb\x9a =\n P\n 0\n\n'))
+    if (a == 210):
+        r.add(ru('sin 210\xcb\x9a =\n 7P/6\n -1/2\n\n'))
+    if (a == 225):
+        r.add(ru('sin 225\xcb\x9a =\n 5P/4\n -\xe2\x88\x9a2/2\n\n'))
+    if (a == 240):
+        r.add(ru('sin 240\xcb\x9a =\n 4P/3\n -\xe2\x88\x9a3/2\n\n'))
+    if (a == 270):
+        r.add(ru('sin 270\xcb\x9a =\n 3P/2\n -1\n\n'))
+    if (a == 300):
+        r.add(ru('sin 300\xcb\x9a =\n 5P/3\n -\xe2\x88\x9a3/2\n\n'))
+    if (a == 315):
+        r.add(ru('sin 315\xcb\x9a =\n 7P/4\n -\xe2\x88\x9a2/2\n\n'))
+    if (a == 330):
+        r.add(ru('sin 300\xcb\x9a =\n 11P/6\n -1/2\n\n'))
+    if (a == 360):
+        r.add(ru('sin 360\xcb\x9a =\n 2P\n 0\n\n'))
+
+
+
+def cos():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5cos(x)\xe7\x9a\x84\xe8\xa7\x92\xe5\xba\xa6'), 'float')
+    if (a == 30):
+        r.add(ru('cos 30\xcb\x9a =\n P/6\n \xe2\x88\x9a3/2\n\n'))
+    if (a == 45):
+        r.add(ru('cos 45\xcb\x9a =\n P/4\n \xe2\x88\x9a2/2\n\n'))
+    if (a == 60):
+        r.add(ru('cos 60\xcb\x9a =\n P/3\n 1/2\n\n'))
+    if (a == 90):
+        r.add(ru('cos 90\xcb\x9a =\n P/2\n 0\n\n'))
+    if (a == 120):
+        r.add(ru('cos 120\xcb\x9a =\n 2P/3\n -1/2\n\n'))
+    if (a == 135):
+        r.add(ru('cos 135\xcb\x9a =\n 3P/4\n -\xe2\x88\x9a2/2\n\n'))
+    if (a == 150):
+        r.add(ru('cos 150\xcb\x9a =\n 5P/6\n -\xe2\x88\x9a3/2\n\n'))
+    if (a == 180):
+        r.add(ru('cos 180\xcb\x9a =\n P\n -1\n\n'))
+    if (a == 210):
+        r.add(ru('cos 210\xcb\x9a =\n 7P/6\n -\xe2\x88\x9a3/2\n\n'))
+    if (a == 225):
+        r.add(ru('cos 225\xcb\x9a =\n 5P/4\n -\xe2\x88\x9a2/2\n\n'))
+    if (a == 240):
+        r.add(ru('cos 240\xcb\x9a =\n 4P/3\n -1/2\n\n'))
+    if (a == 270):
+        r.add(ru('cos 270\xcb\x9a =\n 3P/2\n 0\n\n'))
+    if (a == 300):
+        r.add(ru('cos 300\xcb\x9a =\n 5P/3\n 1/2\n\n'))
+    if (a == 315):
+        r.add(ru('cos 315\xcb\x9a =\n 7P/4\n \xe2\x88\x9a2/2\n\n'))
+    if (a == 330):
+        r.add(ru('cos 300\xcb\x9a =\n 11P/6\n \xe2\x88\x9a3/2\n\n'))
+    if (a == 360):
+        r.add(ru('cos 360\xcb\x9a =\n 2P\n 1\n\n'))
+
+
+
+def tg():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5tg(x)\xe7\x9a\x84\xe8\xa7\x92\xe5\xba\xa6'), 'float')
+    if (a == 30):
+        r.add(ru('tg 30\xcb\x9a =\n P/6\n 1/\xe2\x88\x9a3\n\n'))
+    if (a == 45):
+        r.add(ru('tg 45\xcb\x9a =\n P/4\n 1\n\n'))
+    if (a == 60):
+        r.add(ru('tg 60\xcb\x9a =\n P/3\n \xe2\x88\x9a3\n\n'))
+    if (a == 90):
+        r.add(ru('tg 90\xcb\x9a =\n P/2\n \xe6\xb2\xa1\xe6\x84\x8f\xe4\xb9\x89'))
+    if (a == 120):
+        r.add(ru('tg 120\xcb\x9a =\n 2P/3\n -\xe2\x88\x9a3\n\n'))
+    if (a == 135):
+        r.add(ru('tg 135\xcb\x9a =\n 3P/4\n -1\n\n'))
+    if (a == 150):
+        r.add(ru('tg 150\xcb\x9a =\n 5P/6\n 1/\xe2\x88\x9a3\n\n'))
+    if (a == 180):
+        r.add(ru('tg 180\xcb\x9a =\n P\n 0\n\n'))
+    if (a == 210):
+        r.add(ru('tg 210\xcb\x9a =\n 7P/6\n 1/\xe2\x88\x9a3\n\n'))
+    if (a == 225):
+        r.add(ru('tg 225\xcb\x9a =\n 5P/4\n 1\n\n'))
+    if (a == 240):
+        r.add(ru('tg 240\xcb\x9a =\n 4P/3\n \xe2\x88\x9a3\n\n'))
+    if (a == 270):
+        r.add(ru('tg 270\xcb\x9a =\n 3P/2\n \xe6\xb2\xa1\xe6\x84\x8f\xe4\xb9\x89'))
+    if (a == 300):
+        r.add(ru('tg 300\xcb\x9a =\n 5P/3\n -\xe2\x88\x9a3\n\n'))
+    if (a == 315):
+        r.add(ru('tg 315\xcb\x9a =\n 7P/4\n -1\n\n'))
+    if (a == 330):
+        r.add(ru('tg 300\xcb\x9a =\n 11P/6\n 1/\xe2\x88\x9a3\n\n'))
+    if (a == 360):
+        r.add(ru('tg 360\xcb\x9a =\n 2P\n 0\n\n'))
+
+
+
+def ctg():
+    a = appuifw.query(ru('\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5ctg(x)\xe7\x9a\x84\xe8\xa7\x92\xe5\xba\xa6'), 'float')
+    if (a == 30):
+        r.add(ru('ctg 30\xcb\x9a =\n P/6\n \xe2\x88\x9a3\n\n'))
+    if (a == 45):
+        r.add(ru('ctg 45\xcb\x9a =\n P/4\n 1\n\n'))
+    if (a == 60):
+        r.add(ru('ctg 60\xcb\x9a =\n P/3\n 1/\xe2\x88\x9a3\n\n'))
+    if (a == 90):
+        r.add(ru('ctg 90\xcb\x9a =\n P/2\n 0\n\n'))
+    if (a == 120):
+        r.add(ru('ctg 120\xcb\x9a =\n 2P/3\n -1/\xe2\x88\x9a3\n\n'))
+    if (a == 135):
+        r.add(ru('ctg 135\xcb\x9a =\n 3P/4\n -1\n\n'))
+    if (a == 150):
+        r.add(ru('ctg 150\xcb\x9a =\n 5P/6\n -\xe2\x88\x9a3\n\n'))
+    if (a == 180):
+        r.add(ru('ctg 180\xcb\x9a =\n P\n \xe6\xb2\xa1\xe6\x84\x8f\xe4\xb9\x89\n\n'))
+    if (a == 210):
+        r.add(ru('ctg 210\xcb\x9a =\n 7P/6\n \xe2\x88\x9a3\n\n'))
+    if (a == 225):
+        r.add(ru('ctg 225\xcb\x9a =\n 5P/4\n 1\n\n'))
+    if (a == 240):
+        r.add(ru('ctg 240\xcb\x9a =\n 4P/3\n 1/\xe2\x88\x9a3\n\n'))
+    if (a == 270):
+        r.add(ru('ctg 270\xcb\x9a =\n 3P/2\n 0\n\n'))
+    if (a == 300):
+        r.add(ru('ctg 300\xcb\x9a =\n 5P/3\n -1/\xe2\x88\x9a3\n\n'))
+    if (a == 315):
+        r.add(ru('ctg 315\xcb\x9a =\n 7P/4\n -1\n\n'))
+    if (a == 330):
+        r.add(ru('ctg 300\xcb\x9a =\n 11P/6\n -\xe2\x88\x9a3\n\n'))
+    if (a == 360):
+        r.add(ru('ctg 360\xcb\x9a =\n 2P\n \xe6\xb2\xa1\xe6\x84\x8f\xe4\xb9\x89'))
+
+
+
+def kalkulator():
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    r.focus = True
+    r.font = u'Sans MT 936_s60'
+    r.color = 7367306
+    r.set(ru('\xe7\xae\x80\xe5\x8d\x95\xe7\x9a\x84\xe7\xae\x97\xe6\x9c\xaf\xe8\xae\xa1\xe7\xae\x97\xe5\xb0\x8f\xe5\xb7\xa5\xe5\x85\xb7'))
+    r.add(ru('\xe5\x8f\x82\xe7\x85\xa7\xe8\xae\xb8\xe6\x84\xbf\xe4\xb8\x8a\xe4\xb8\xaa\xe7\x89\x88\xe6\x9c\xac\xe6\xb1\x89\xe5\x8c\x96'))
+    r.color = 0
+    appuifw.app.exit_key_handler = main_
+    appuifw.app.title = ru('\xe8\xae\xa1\xe7\xae\x97\xe5\x99\xa8')
+    appuifw.app.menu = [(ru('\xe6\x99\xae\xe9\x80\x9a\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('\xe5\x8a\xa0\xe6\xb3\x95'),
+        plus),
+       (ru('\xe5\x87\x8f\xe6\xb3\x95'),
+        minus),
+       (ru('\xe4\xb9\x98\xe6\xb3\x95'),
+        umnoj),
+       (ru('\xe9\x99\xa4\xe6\xb3\x95'),
+        delenie))),
+     (ru('\xe6\x8c\x87\xe6\x95\xb0\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('\xe6\xb1\x82\xe6\xac\xa1\xe6\x96\xb9'),
+        stepen),
+       (ru('\xe5\xb9\xb3\xe6\x96\xb9\xe6\xa0\xb9'),
+        kvd),
+       (ru('\xe7\xab\x8b\xe6\x96\xb9\xe6\xa0\xb9'),
+        kubi),
+       (ru('\xe5\xbc\x80\xe6\xa0\xb9\xe6\xb1\x82\xe6\xac\xa1\xe6\x96\xb9'),
+        koren),
+       (ru('\xe4\xba\x8c\xe6\xac\xa1\xe6\x96\xb9\xe7\xa8\x8b'),
+        cv))),
+     (ru('\xe7\x99\xbe\xe5\x88\x86\xe6\xaf\x94\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('\xe6\x96\xb0\xe5\xa2\x9e\xe7\x99\xbe\xe5\x88\x86\xe6\xaf\x94'),
+        procentpl),
+       (ru('\xe5\x89\x8a\xe5\x87\x8f\xe7\x99\xbe\xe5\x88\x86\xe6\xaf\x94'),
+        procentmin),
+       (ru('\xe7\x99\xbe\xe5\x88\x86\xe6\xaf\x94\xe4\xb9\x98\xe6\xb3\x95'),
+        procent))),
+     (ru('\xe7\xba\xa7\xe6\x95\xb0'),
+      ((ru('\xe5\x87\xa0\xe4\xbd\x95\xe7\xba\xa7\xe6\x95\xb0'),
+        geop),
+       (ru('\xe6\x88\x90\xe5\x91\x98\xe5\x87\xa0\xe4\xbd\x95\xe7\xba\xa7\xe6\x95\xb0'),
+        geopsum),
+       (ru('\xe5\xb7\xae\xe5\xbc\x82\xe7\xba\xa7\xe6\x95\xb0'),
+        arip),
+       (ru('\xe5\x85\xb6\xe4\xbb\x96\xe7\xba\xa7\xe6\x95\xb02'),
+        aripsum))),
+     (ru('\xe5\xaf\xb9\xe6\x95\xb0\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('\xe8\x87\xaa\xe7\x84\xb6\xe5\xaf\xb9\xe6\x95\xb0ln(x)'),
+        log1),
+       (ru('\xe6\x99\xae\xe9\x80\x9a\xe5\xaf\xb9\xe6\x95\xb0log(x)'),
+        log2))),
+     (ru('\xe5\x85\xb6\xe4\xbb\x96\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('\xe6\xb1\x82\xe9\x98\xb6\xe4\xb9\x98'),
+        fact),
+       (ru('\xe6\x8c\x87\xe9\x92\x88\xe8\xbf\x90\xe7\xae\x97'),
+        expon)))]
+
+
+
+def konverter():
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    r.focus = True
+    r.font = u'Sans MT 936_s60'
+    r.color = 7367306
+    r.set(ru('\xe5\xb8\xb8\xe7\x94\xa8\xe7\x9a\x84\xe5\x8d\x95\xe4\xbd\x8d\xe8\xbd\xac\xe6\x8d\xa2\xe5\xb7\xa5\xe5\x85\xb7'))
+    r.add(ru('\n   \xe8\xaf\xb7\xe6\x8c\x89\xe5\xb7\xa6\xe8\xbd\xaf\xe9\x94\xae\xe7\xbb\xa7\xe7\xbb\xad\xef\xbc\x8c\xe5\x8f\xb3\xe8\xbd\xaf\xe9\x94\xae\xe8\xbf\x94\xe5\x9b\x9e\n   '))
+    r.color = 0
+    appuifw.app.exit_key_handler = main_
+    appuifw.app.title = ru('\xe8\xbd\xac\xe6\x8d\xa2\xe5\x99\xa8')
+    appuifw.app.menu = [(ru('\xe6\xb8\xa9\xe5\xba\xa6\xe8\xbd\xac\xe6\x8d\xa2'),
+      ((ru('\xe5\x8d\x8e\xe6\xb0\x8f-\xe6\x91\x84\xe6\xb0\x8f\xe5\xba\xa6/\xe5\xbc\x80\xe6\xb0\x8f'),
+        faren),
+       (ru('\xe6\x91\x84\xe6\xb0\x8f\xe5\xba\xa6-\xe5\x8d\x8e\xe6\xb0\x8f/\xe5\xbc\x80\xe6\xb0\x8f'),
+        celsiy),
+       (ru('\xe5\xbc\x80\xe6\xb0\x8f-\xe6\x91\x84\xe6\xb0\x8f\xe5\xba\xa6/\xe5\x8d\x8e\xe6\xb0\x8f'),
+        kalv))),
+     (ru('\xe9\x95\xbf\xe5\xba\xa6\xe8\xbd\xac\xe6\x8d\xa2'),
+      ((ru('\xe5\x85\xac\xe9\x87\x8c-\xe8\x8b\xb1\xe9\x87\x8c'),
+        vmil),
+       (ru('\xe8\x8b\xb1\xe9\x87\x8c-\xe5\x85\xac\xe9\x87\x8c'),
+        vkm),
+       (ru('\xe7\xb1\xb3-\xe7\xa0\x81/\xe8\x8b\xb1\xe5\xb0\xba'),
+        vyd),
+       (ru('\xe7\xa0\x81-\xe7\xb1\xb3/\xe8\x8b\xb1\xe5\xb0\xba'),
+        vmet),
+       (ru('\xe8\x8b\xb1\xe5\xaf\xb8-\xe5\x8e\x98\xe7\xb1\xb3'),
+        vcm),
+       (ru('\xe5\x8e\x98\xe7\xb1\xb3-\xe8\x8b\xb1\xe5\xaf\xb8'),
+        vdy))),
+     (ru('\xe9\x87\x8d\xe9\x87\x8f\xe8\xbd\xac\xe6\x8d\xa2(\xe6\xb6\xb2)'),
+      ((ru('\xe6\xa1\xb6-\xe5\x85\xac\xe5\x8d\x87'),
+        vlit),
+       (ru('\xe5\x85\xac\xe5\x8d\x87-\xe6\xa1\xb6'),
+        vbar),
+       (ru('\xe5\x8a\xa0\xe4\xbb\x91-\xe5\x85\xac\xe5\x8d\x87'),
+        vlitg),
+       (ru('\xe5\x85\xac\xe5\x8d\x87-\xe5\x8a\xa0\xe4\xbb\x91'),
+        vgal))),
+     (ru('\xe8\xb4\xa8\xe9\x87\x8f\xe8\xbd\xac\xe6\x8d\xa2'),
+      ((ru('\xe5\x8d\x83\xe5\x85\x8b-\xe7\xa3\x85'),
+        vfunt),
+       (ru('\xe7\xa3\x85-\xe5\x8d\x83\xe5\x85\x8b'),
+        vkgr),
+       (ru('\xe5\x85\x8b-\xe7\x9b\x8e\xe5\x8f\xb8'),
+        vunc),
+       (ru('\xe7\x9b\x8e\xe5\x8f\xb8-\xe5\x85\x8b'),
+        vgr))),
+     (ru('\xe8\xbf\x9b\xe5\x88\xb6\xe8\xbd\xac\xe6\x8d\xa2'),
+      sis)]
+
+
+
+def trigonometr():
+    uitricks.set_text(ru('\xe8\xbf\x94\xe5\x9b\x9e'), EAknSoftkeyExit)
+    r.focus = True
+    r.color = 0
+    r.font = u'Sans MT 936_s60'
+    r.color = 7367306
+    r.set(ru('\xe3\x80\x90\xe7\xae\x80\xe5\x8d\x95\xe8\xbf\x90\xe7\xae\x97\xe3\x80\x91\xef\xbc\x9a\xe6\x82\xa8\xe5\x8f\xaf\xe7\x94\xa8\xe6\xad\xa4\xe5\x8a\x9f\xe8\x83\xbd\xe5\xbe\x97\xe5\x88\xb0sin(x),cos(x),tan(x),cot(x)\xe5\x9c\xa8\xe7\x89\xb9\xe5\xae\x9a\xe8\xa7\x92(30,45,60,90\xe2\x80\xa6)\xe7\x9a\x84\xe6\x95\xb0\xe5\x80\xbc\xe5\x92\x8c\xe6\x89\x80\xe5\x9c\xa8\xe8\xb1\xa1\xe9\x99\x90\xe3\x80\x82'))
+    r.add(ru('  \xe3\x80\x90\xe5\xa4\x8d\xe6\x9d\x82\xe8\xbf\x90\xe7\xae\x97\xe3\x80\x91\xef\xbc\x9a\xe5\x90\x84\xe7\xa7\x8d\xe4\xb8\x89\xe8\xa7\x92\xe5\x87\xbd\xe6\x95\xb0\xe5\x92\x8c\xe5\x8f\x8d\xe4\xb8\x89\xe8\xa7\x92\xe5\x87\xbd\xe6\x95\xb0\xe5\xbc\xa7\xe5\xba\xa6\xe5\x88\xb6\xe5\x92\x8c\xe8\xa7\x92\xe5\xba\xa6\xe5\x88\xb6\xe7\x9a\x84\xe8\xae\xa1\xe7\xae\x97\xe3\x80\x82\xe4\xbd\xbf\xe7\x94\xa8\xe6\x97\xb6\xe8\xaf\xb7\xe6\xa0\xb9\xe6\x8d\xae\xe6\x8f\x90\xe7\xa4\xba\xe8\xbe\x93\xe5\x85\xa5\xe6\x95\xb0\xe5\x80\xbc'))
+    appuifw.app.exit_key_handler = main_
+    appuifw.app.title = ru('\xe4\xb8\x89\xe8\xa7\x92\xe8\xae\xa1\xe7\xae\x97')
+    r.color = 0
+    appuifw.app.menu = [(ru('\xe5\xa4\x8d\xe6\x9d\x82\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('sin(x)'),
+        sinu),
+       (ru('cos(x)'),
+        cosin),
+       (ru('tg(x)'),
+        tang),
+       (ru('ctg(x)'),
+        cotang),
+       (ru('arcsin(x)'),
+        asinu),
+       (ru('arccos(x)'),
+        acosin),
+       (ru('arctan(x)'),
+        atang),
+       (ru('arccot(x)'),
+        acotang))),
+     (ru('\xe7\xae\x80\xe5\x8d\x95\xe8\xbf\x90\xe7\xae\x97'),
+      ((ru('sin(x)'),
+        sin),
+       (ru('cos(x)'),
+        cos),
+       (ru('tg(x)'),
+        tg),
+       (ru('ctg(x)'),
+        ctg)))]
+
+
+main_()
+from e32 import _stdo
+_stdo(u'c:\\smartcalk_error.log')
+script_lock = e32.Ao_lock()
+script_lock.wait()
+
+# local variables:
+# tab-width: 4

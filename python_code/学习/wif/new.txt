@@ -1,0 +1,41 @@
+wif v_0.2.5
+------------------------------
+1. 改变-呼叫Windows的对话
+wif.note(text[,title]), wif.warning(text[,title]), wif.error(text[,title]).
+通话超时补充的机会，请问显示窗口。
+现在，他们的语法如下：
+------------------------------
+wif.note(text[,title='text',timeout=time])
+wif.warning(text[,title='text',timeout=time])
+wif.error(text[,title='text',timeout=time])
+如果事业的窗口是这样的：
+wif.note('窗口',title='消息',timeout=5)
+县是在屏幕上的窗口标题为“讯息” ，一个文本的“窗口” ，本身就会消失后5秒。
+------------------------------
+2. 改变功能 hide()
+以前，它可能导致或不带参数与参数"window","menu".
+设施。而且，正是这种密切的obekt.primer ：
+------------------------------
+m1=wif.Menu()
+m2=wif.Menu()
+m3=wif.Menu()
+show(m1)
+show(m2)
+show(m3)
+hide(m3)
+hide(m2)
+kide(m3)
+------------------------------
+3. 修订后的文本输入框。现在的工作更稳定和更美好的。
+text=wif.input([text,title,mode,max])
+论据，文字，标题，模式和MAX是没有必要的。文本的初步文本。这个文本将显示在窗口与他的外观。
+title-窗口标题
+mode-模式。允许的值： "ABC", "abc", "РУС", "рус", "123". Думаю ясно.
+max-最大长度
+4.补充f的原因 input_time([title]). 以前的工程同样。
+返回unikod符合所施加的时间。
+5. 补充f的原因 input_date([title]). 以前的工程同样
+------------------------------
+你会怎样想看到在未来的版本什么的意愿，将在开发的模块（在合理限度内） ？
+建议建立一个替代pitonovskuyu simbiana等。 prinimayutsya.ya现实主义者，不会！
+------------------------------

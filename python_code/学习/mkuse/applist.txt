@@ -1,0 +1,3 @@
+import applist
+print applist.applist()
+#用来获取已安装文件的路径(app文件)，软件uid以及软件名！包括z盘文件！

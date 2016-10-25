@@ -1,0 +1,26 @@
+显示透明图像
+很复杂性不好理解，但失误往往是不相关的一个模块，和滥用masok.nachnem 。
+该模块predurmotrena的机会，显示图像与口罩。
+如何创建一个面具？事实上，当开启的图像自动引发的开放模式'的RGB '或'的RGB - 16' 。 为非常形象是好的，但需要掩盖regime'1 』 （ 1 bit每像素， 7,8,9轴）或'升' （ 8 bits每像素8.9轴） 。
+假设您有一个图片和面具背后的路径电子商务： e:\\img.jpg，电子商务： e:\\mask.jpg.。如何适当地开放？和这里的如何：
+
+import graphics
+#导入图型graphics模块
+img=graphics.Image.open(u'e:\\img.jpg')
+# 打开一张图片
+m=graphics.Image.open(u'e:\\mask.jpg')
+# 开放的面具（开放时间在16位元模式/像素
+mask=graphics.Image.new(m.size,mode='1')
+# 创建了一个面具， 1位/像素大小作为一个16位
+mask.blit(m)
+# 动议的16位掩码在1位。
+del m
+#删除16位
+
+现在国际管理集团和面具，可以用来显示。
+
+撤回的可能方法的形象， glink ，撤回到屏幕上。或方法，连续，撤回到表。
+
+如果您使用方法的图片或glink屏幕，菜单或Windows ，面具，并不一定表示，该模块本身的建议。
+因此，将会减少oshibok.esli您使用的是形象的方法行表外，还有面具，是必需的。
+

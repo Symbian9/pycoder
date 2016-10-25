@@ -1,0 +1,41 @@
+作者：無爱
+
+(原版)
+进度条模块使用方法：
+import progressbartw
+
+pb = progressbartw.ProgressBarTW()
+
+pb.begin_progress(500)
+
+for i in range(500):
+   pb.do_progress(i)
+
+pb.end_progress()
+————————
+(修改版)
+作者：飞影7610
+
+progressbartw(修改版)
+不用先定义窗口就可以使用了，可直接替换旧版本
+示例代码如下(模块中已内置测试代码，可用ped直接测试)：
+
+def ru(s):return s.decode('utf-8')
+# ProgressBarTW(1,1)
+# 参数1：1为系统字体，窗口在中间(2为大字体，窗口偏下)
+# 参数2：1为后台时隐藏进度条，0为不隐藏
+# 两个参数都可缺省，缺省值都是1
+p = ProgressBarTW(1,1)
+# p.set_window_size((176,36)) # 可以自定义窗口大小
+p2 = ProgressBarTW(2,0)
+# p2.set_window_size((176,36)) # 可以自定义窗口大小
+p.begin_progress(5)
+# p.begin_progress(5,ru('当前任务进度')) # 可自定义标题
+p2.begin_progress(5)
+for i in xrange(5):
+++p.do_progress(i)
+++p2.note_text=(ru('任务进度 (%d/%d)'))%(i+1,5)
+++p2.do_progress(i)
+p.end_progress()
+p2.end_progress()
+注：最好不要替换原来的模块，因为此修改版跟原版的功能存在差别，你可以放在脚本运行目录中来使用

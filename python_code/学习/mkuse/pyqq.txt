@@ -1,0 +1,25 @@
+作者：爱不只是说说
+模块作者：张小烦
+
+注：以下均用QQ号10000做演示
+
+import pyqq
+def cn(x):return x.decode("utf-8")
+
+qq='10000'#QQ号
+pw='123456'#QQ密码
+q=pyqq.pyqq(qq,pw)
+print cn('正在登录…')
+if q.Login():#登录
+  print cn('登录成功！')
+  print cn('正在获取在线好友…\n'),q.Online()
+  print cn('正在获取好友列表…\n'),q.List()
+  print cn('设置上线状态…\n'),q.ChangeStat('30')#10上线、20离线、30忙碌
+  print cn('获取指定QQ号码的详细内容…\n'),q.GetInfo('10000')
+  print cn('正在增加指定QQ号码为好友…\n'),q.AddFriend('10000')#返回加为好友请求的状态，0，为无需验证（说明已经加成），1，需要身份验证（则需要下一步请求）3，拒绝任何人加（无法加）
+  print cn('正在验证添加好友信息…\n'),q.Ack_AddFriend('0','您好！')#此过程既应答被加，也应答加对方但需要验证的时候。cd状态码：0，通过验证，1，拒绝验证，2，请求加好友。rs为请求理由(当第一次加对方需要验证时，则需要此步骤发出验证请求)
+  print cn('正在获取消息…\n'),q.GetMsg()
+  print cn('正在发送消息…\n'),q.SendMsg('10000','你好，打扰了，正在测试软件…')
+  print cn('正在退出登录…\n'),q.Logout()
+else:
+  print cn('登录失败！')

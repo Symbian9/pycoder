@@ -1,0 +1,97 @@
+建立图型对象：
+他们的创作，您可以申报副本，示例：
+------------------------------
+import wif
+scr=wif.Screen()
+menu=wif.Menu()
+window=wif.Window()
+我认为这是可以理解的。
+------------------------------
+所有这些网站有相同的变量和方法不同的唯一的出路。
+考虑变量在此基础上他们的屏幕 scr:
+------------------------------
+scr.x,scr.y,scr.w,scr.h- 坐标和大小设施
+scr.color=[с1,с2]- с1 背景颜色, с2 顶线的颜色
+scr.text_color-文本的颜色由默认
+scr.link_color-颜色参考预设
+scr.title_color- 彩色标题文字
+scr.text_font-文字字型预设
+scr.link_font-连接预设字型
+scr.cur_color=[с1,с2]- 颜色的光标（ с1 石， C2-关标）
+scr.cur_pos-光标位置
+scr.title-文字标题
+scr.exit-在这里可以提到退出的原因，为合适的软件
+scr.bg- 背景图片
+scr.mask- 面具的背景
+所有这些变数可以改变他们的酌情权。
+------------------------------
+方法：
+------------------------------
+scr.set_bg(image[,mask])- 集数字作为一个对象的背景
+------------------------------
+img=graphics.Image.open(u'path\\to\\image\\image.jpg')
+scr.set_bg(img)
+------------------------------
+scr.del_bg()-删除绘图纹波
+------------------------------
+scr.del_bg()
+------------------------------
+scr.rotate(rot)- 轮流在屏幕上
+------------------------------
+scr.rotate(90)
+scr.rotate(180)
+scr.rotate(270)
+scr.rotate(0)
+------------------------------
+scr.bind(scancode,func)-
+键值
+------------------------------
+import wif
+from wif_keys import *
+scr=wif.Screen()
+menu=wif.Menu()
+scr.bind(KMENU,lambda:wif.show(menu))
+------------------------------
+scr.set_size((x,y,w,h))-修改大小的设施。该名单4 elementv ：
+坐标左上角的设施，宽度和高度
+------------------------------
+menu=wif.Menu()
+menu.set_size((5,30,150,170))
+------------------------------
+scr.text(text[,color,font,align])- 添加文字。选择是简单的文本，如果绝对的颜色，字体（ unikod ）及路线('left','right','center')
+------------------------------
+scr.text('my text',color=0x00ff80,font=u'albi13',align='center')
+------------------------------
+scr.link(text,func[,color,font,align])- 添加ssylku.parametry相同，参数
+func- 这个功能被处决当你点击链接
+------------------------------
+scr.link('my link',lambda:my_func(),color=0x00ff80,font=u'albi13',align='center')
+------------------------------
+scr.row_link(text,func[,color,font,align])- 同样的事情，但如果超行出屏幕上，然后裁剪
+------------------------------
+scr.row_link('my link',lambda:my_func(),color=0x00ff80,font=u'albi13',align='center')
+------------------------------
+scr.image(image[,mask,align])- 增加了图片。
+------------------------------
+img=graphics.Image.open(u'path\\to\\image.jpg')
+scr.image(img)
+------------------------------
+scr.glink(image,func[,mask,align]) -增加了图形参考。选项是相同的
+------------------------------
+img=graphics.Image.open(u'path\\to\\image.jpg')
+scr.glink(img,lambda:my_func())
+------------------------------
+scr.table(tab)- 添加表。
+------------------------------
+tab=wif.Table((10,50,50,70))
+scr.table(tab)
+------------------------------
+scr.checkbox(check)- 添加复选
+------------------------------
+c=wif.Checkbox()
+scr.checkbox(c)
+------------------------------
+scr.clear()-清除画面
+------------------------------
+scr.clear()
+------------------------------

@@ -1,0 +1,11 @@
+作者：爱不只是说说
+
+import Note
+
+n=Note.note()
+
+n.note('内容：','标题',vid=0,sek=2)
+
+解说：
+vid=0为提示框颜色，共三种颜色可远vid=0、vid=1、vid=2
+sek=2为显示时间，可自定义！缺省为4秒！

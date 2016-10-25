@@ -1,0 +1,30 @@
+作者：爱不只是说说
+
+之前网站只介绍过akntextutils模块的文本界面用法，图形界面的用法没有说过，我今天跟大家说说图形界面的用法，还是先演示下文本界面的吧！
+[引用原文]本模块主要用在Canvas界面，当然也能它用。本模块根据手机屏幕宽度和字体大小，获得一行所能显示的文字。
+wrap_text_to_array(text, 'dense', 176)
+解释：text为需要分断的长文本。dense为默认系统字体，也可以写其它。176为屏幕宽度，也可理解为一行文字的最大宽度。返回值为一个列表。将text切分成n个成员，每个成员宽度小于屏宽。
+——————
+文本界面
+import akntextutils
+
+for i in akntextutils.wrap_text_to_array('注意：\nakntextutils模块支持换行语句！\n如:(\\n)换行\n\t(\\t)居中\n你只需在需要的地方加上即可！模块可以根据换行语句和规定的长度自动分割！'.decode('utf8'), 'dense', 150):
+  print i
+
+——————
+图形界面
+import appuifw,graphics,akntextutils
+
+img=graphics.Image.new((176,208))
+img.clear(0xffffff)
+a=0
+for i in akntextutils.wrap_text_to_array('注意：\nakntextutils模块支持换行语句！\n如:(\\n)换行\n\t(\\t)居中\n你只需在需要的地方加上即可！模块可以根据换行语句和规定的长度自动分割！'.decode('utf8'), 'dense', 150):
+  a+=1
+  img.text((10,24*a), i, 0,('normal',18))
+
+def c(rect):
+  j.blit(img)
+j=appuifw.Canvas(redraw_callback=c)
+appuifw.app.body=j
+appuifw.app.screen='full'
+appuifw.e32.ao_sleep(5)

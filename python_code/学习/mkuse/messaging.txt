@@ -1,0 +1,6 @@
+作者：明天见
+
+messaging模块用来发送信息
+messaging.sms_send(电话,内容)
+例：messaging.sms_send(u15980037210,u'hello')
+中文信息messaging.sms_send(u'15980037210','你好！'.decode('utf8'))

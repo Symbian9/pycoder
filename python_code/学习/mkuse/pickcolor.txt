@@ -1,0 +1,6 @@
+作者：爱不只是说说
+模块作者：艾力克
+
+import pickcolor
+
+print pickcolor.show().Pick()

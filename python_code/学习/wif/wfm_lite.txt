@@ -1,0 +1,10 @@
+这里是一个说明该模块wfm_lite 。 fayl.menedzher.prednaznachen是很容易的，方便的搜索文件在内存中。
+写在一个模块wif 。我们只需要的F的原因-manager( [mask] )
+如果该参数，搜索将proizvoditsyu据maski.primery ：
+wfm_lite.manager()- 显示所有目录和文件
+wfm_lite.manager('.jpg')- 显示jpg所有目录和文件
+wfm_lite.manager('.txt')-显示txt所有目录和文件
+wfm_lite.manager('.py')- 显示py所有目录和文件
+注意：
+wfm_lite.manager('*')- 只显示目录
+wfm_lite.manager(*)- 只显示文件

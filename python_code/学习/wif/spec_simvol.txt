@@ -1,0 +1,35 @@
+文字输入框：
+
+撰写的文字是通过一本阶级的投入。
+首先是一类
+第二个是功能
+第三是对象。
+
+它是通过InP的对象，我们会工作。
+内容对象的 inp:
+inp.eng-变量包含的名单英语字母。英文字母排列，附以钥匙
+inp.num-变量包含清单的数字，依恋钥匙
+inp.liter-变量包含列出了所有可用的语言
+inp.lang-当前语言
+inp.act-目前登记
+inp.title-窗口标题
+inp.key(k)-功能，控制键。
+
+内容 inp.eng:
+    inp.eng = ( [ dec(' 0\\@()<>[]{}#') , dec('.,?!:;\'\"=-+/*1') , dec('ABC2') , dec('DEF3') , dec('GHI4') , dec('JKL5') , dec('MNO6') , dec('PQRS7') , dec('TUV8') , dec('WXYZ9') ] , [ dec(' 0\\@()<>[]{}#') , dec('.,?!:;\'\"=-+/*1') , dec('abc2') , dec('def3') , dec('ghi4') , dec('jkl5') , dec('mno6') , dec('pqrs7') , dec('tuv8') , dec('wxyz9') ] )
+
+你可以看到这个变量是一个组队的两份名单（信上，下册） 。
+每份名单构成的10线在unikode ，每个代表的一套符号，关于按键0-9 。
+俄语语言和数字也正在兴建。然后这一切，给一个变数
+inp.liter:
+
+inp.liter=[inp.eng,inp.rus,inp.num]
+
+如果您要添加他们自己的语言，或一个大的一套特殊字符，您将需要拨号他们的语言变量，并将其添加到清单升。你可以这样做，
+因为：
+reg_low=名单字符在unikode
+reg_hight=名单字符在unikode
+my_lang=(reg_hight,reg_low)
+wif.inp.liter.append(my_lang)
+现已为您的语言输入。
+请注意，一个关键就能进入一个无限的字符数，但我不建议把20多件。

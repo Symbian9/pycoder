@@ -1,0 +1,172 @@
+﻿一、网络知识的一些介绍
+socket是网络连接端点。例如当你的Web浏览器请求www.pythontik.com上的主页时，你的Web浏览器创建一个socket并命令它去连接www.pythontik.com的Web服务器主机，Web服务器也对来自的请求在一个socket上进行监听。两端使用各自的socket来发送和接收信息。
+在使用的时候，每个socket都被绑定到一个特定的IP地址和端口。IP地址是一个由4个数组成的序列，这4个数均是范围0~255中的值（例如，220,176,36,76)；端口数值的取值范围是0~65535。端口数小于1024的都是为众所周知的网络服务所保留的（例如Web服务使用的80端口）；最大的保留数被存储在socket模块的IPPORT_RESERVED变量中。你也可以为你的程序使用另外的端口数值。
+不是所有的IP地址都对世界的其它地方可见。实际上，一些是专门为那些非公共的地址所保留的（比如形如192.168.y.z或10.x.y.z）。地址127.0.0.1是本机地址；它始终指向当前的计算机。程序可以使用这个地址来连接运行在同一计算机上的其它程序。
+IP地址不好记，你可以花点钱为特定的IP地址注册一个主机名或域名（比如使用www.pythontik.com代替222.76.216.16）。域名服务器（DNS）处理名字到IP地址的映射。每个计算机都可以有一个主机名，即使它没有在官方注册。
+多少信息通过一个网络被传送基于许多因素，其中之一就是使用的协议。许多的协议是基于简单的、低级协议以形成一个协议栈。例如HTTP协议，它是用在Web浏览器与Web服务器之间通信的协议，它是基于TCP协议，而TCP协议又基于IP协议。
+当在你自己的两个程序间传送信息的时候，你通常选择TCP或UDP协议。TCP协议在两端间建立一个持续的连接，并且你所发送的信息有保证的按顺序到达它们的目的地。UDP不建立连接，它的速度快但不可靠。你发送的信息也可能到不了另一端；或它们没有按顺序到达。有时候一个信息的多个复制到达接收端，即使你只发送了一次。
+二、使用地址和主机名
+socket模块提供了几个函数用于使用主机名和地址来工作。
+gethostname()返回运行程序所在的计算机的主机名：
+>>> import socket
+>>> socket.gethostname()
+'lenovo'
+gethostbyname(name)尝试将给定的主机名解释为一个IP地址。首先将检查当前计算机是否能够解释。如果不能，一个解释请求将发送给一个远程的DNS服务器（远程的DNS服务器还可能将解释请求转发给另一个DNS服务器，直到该请求可以被处理）。gethostbyname函数返回这个IP地址或在查找失败后引发一个异常。
+>>> socket.gethostbyname('lenovo')
+'192.168.1.4'
+>>> socket.gethostbyname('www.pythontik.com')
+'222.76.216.16'
+一个扩展的形式是gethostbyname_ex(name)，它返回一个包含三个元素的元组，分别是给定地址的主要的主机名、同一IP地址的可选的主机名的一个列表、关于同一主机的同一接口的其它IP地址的一个列表（列表可能都是空的）。
+>>> socket.gethostbyname('www.163.com')
+'60.191.81.49'
+>>> socket.gethostbyname_ex('www.163.com')
+('www.cache.split.netease.com', ['www.163.com'], ['60.191.81.48', '60.191.81.49
+, '60.191.81.50', '60.191.81.51', '60.191.81.52', '60.191.81.53', '60.191.81.54
+, '220.181.28.50', '220.181.28.51', '220.181.28.52', '220.181.28.53', '220.181.
+8.54', '220.181.31.182', '220.181.31.183', '220.181.31.184'])
+gethostbyaddr(address)函数的作用与gethostbyname_ex相同，只是你提供给它的参数是一个IP地址字符串：
+>>> socket.gethostbyaddr('202.165.102.205')
+('homepage.vip.cnb.yahoo.com', ['www.yahoo.com.cn'], ['202.165.102.205'])
+getservbyname(service,protocol)函数要求一个服务名（如'telnet'或'ftp'）和一个协议（如'tcp'或'udp'），返回服务所使用的端口号：
+>>>socket.getservbyname('http','tcp')
+80
+>>>socket.getservbyname('telnet','tcp)
+23
+通常，非Python程序以32位字节包的形式存储和使用IP地址。inet_aton(ip_addr)和inet_ntoa(packed)函数在这个形式和IP地址间作转换：
+>>> socket.inet_aton('222.76.216.16')
+'\xdeL\xd8\x10'
+>>> socket.inet_ntoa('\xdeL\xd8\x10')
+'222.76.216.16'
+socket也定义了一些变量来代表保留的IP地址。INADDR_ANY和INADDR_BROADCAST是被保留的IP地址分别代表任意IP地址和广播地址；INADDR_LOOPBACK代表loopback设备，总是地址127.0.0.1。这些变量是32位字节数字形式的。
+getfqdn([name])函数返回关于给定主机名的全域名（如果省略，则返回本机的全域名）。
+三、使用低级的socket通信
+尽管Python提供了一些封装，使得使用socket更容易，但是你也可以直接使用socket来工作。
+1、创建和销毁socket
+socket模块中的socket(family,type[,proto])函数创建一个新的socket对象。family的取值通常是AF_INET。type的取值通常是SOCK_STREAM(用于定向的连接，可靠的TCP连接)或SOCK_DGRAM(用于UDP)：
+>>> from socket import *
+>>> s=socket(AF_INET,SOCK_STREAM)
+family和type参数暗指了一个协议，但是你可以使用socket的第三个可选的参数（proto的取值如IPPROTO_TCP或IPPROTO_RAW）来指定所使用的协议。代替使用IPPROTO_XX变量，你可以使用函数getprotobyname：
+>>> getprotobyname('tcp')
+6
+>>> IPPROTO_TCP
+6
+fromfd(fd,type[,proto])是一个很少被使用的函数，它用来从打开的一个文件描述符创建一个socket对象（文件描述符由文件的fileno()方法返回）。文件描述符与一个真实的socket连接，而非一个文件。socket对象的fileno()方法返回关于这个socket的文件描述符。
+当你使用完工socket对象时，你应调用close()方法显式的关闭socket以尽快释放资源（尽管socket被垃圾回收器回收时将自动被关闭）。另外，你也可以使用shutdown(how)方法来关闭连接一边或两边。参数0阻止socket接收数据，1阻止发送，2阻止接收和发送。
+2、连接socket
+当两个socket连接时(例如使用TCP)，一端监听和接收进来的连接，而另一端发起连接。临听端创建一个socket，调用bind(address)函数去绑定一个特定的地址和端口，调用listen(backlog)来临听进来的连接，最后调用accept()来接收这个新的，进来的连接,下面是在服务器端的代码：
+>>> s=socket(AF_INET,SOCK_STREAM)
+>>> s.bind(('127.0.0.1',44444))
+>>> s.listen(1)
+>>> q,v=s.accept() #返回socket q和地址v
+注意：上面的代码将一直处于等待直到连接被建立。下面我们再打开另一个Python解释器，用作客户端；然后键入如下代码：
+>>> from socket import *
+>>> s=socket(AF_INET,SOCK_STREAM)
+>>> s.connect(('127.0.0.1',44444) #发起连接
+好了，我们验证一下连接是否建立了。我们在服务器端键入以下代码来发送一条信息：
+>>> q.send('hello,i come from pythontik.com')
+31 #发送的字节数
+在客户端键入以下代码来接收信息：
+>>> s.recv(1024)
+'hello,i come from pythontik.com'
+你传递给bind和connect的地址是一个关于AF_INET的socket的元组(ipAddress,port)。代替connect，你也可以调用connect_ex(address)方法。如果背后对C的connect的调用返回一个错误，那么connect_ex也将返回一个错误（否则返回0代表成功），代替引发一个异常。
+当你调用listen时，你给了它一个参数，这个数值表示在等待队列中允许放置的进来的连接总数。当等待队列已满时，如果有更多的连接到达，那么远程端将被告知连接被拒绝。在socket模块中的SOMAXCONN变量表明了等待队列所能容纳的最大量。
+accept()方法返回形如bind和connect的一个地址，代表远程socket的地址。下面显示变量v的值：
+>>> v
+('127.0.0.1', 1334)
+UDP是不定向的连接，但是你仍然可以使用给定的目的地址和端口来调用connect去关联一个socket。
+3、发送和接收数据
+函数send(string[,flags])发送给定的字符串到远程socket。sendto(string[,flags],address)发送给定的字符串到一个特定的地址。通常，send方法用于可靠连接的socket，sendto方法用于不可靠连接的socket，但是如果你在一个UDP socket上调用connect来使它与一个特定的目标建立联系，那么这时你也可以使用send方法来代替sendto。
+send和sendto都返回实际发送的字节数。当你快速发送大量的数据的时候，你可能想去确保全部信息已被发送，那么你可以使用如下的一个函数：
+def safeSend(sock,msg):
+    sent=0
+    while msg:
+        i=sock.send(msg)
+        if i==-1: #发生了错误
+            return -1
+        sent+=i
+        msg=msg[i:]
+        time.sleep(25)
+    return sent
+recv(bufsize[,flags])方法接收一个进来的消息。如果有大量的数据在等待，它只返回前面的bufsize字节数的数据。recvfrom(bufsize[,flags])做同样的事，除了它使用AF_INET socket的返回值是(data,(ipAddress,port)),这便于你知道消息来自哪儿（这对于非连接的socket是有用的）。
+send,sendto,recv和recvfrom方法都有一个可选的参数flags，默认值为0。你可以通过对socket.MSG_*变量进行组合（按位或）来建立flags的值。这些值因平台而有所不同，但是最通用的值如下所示：
+MSG_OOB:处理带外数据（既TCP紧急数据）。
+MSG_DONTROUTE:不使用路由表；直接发送到接口。
+MSG_PEEK:返回等待的数据且不把它们从队列中删除。
+例如，如果你有一个打开的socket，它有一个消息等待被接收，你可以接收这个消息后并不把它从进来的数据的队列中删除：
+>>> q.recv(1024,MSG_PEEK)
+'hello'
+>>> q.recv(1024,MSG_PEEK) #因为没有删除，所以你可以再得到它。
+'hello'
+makefile([mode[,bufsize]])方法返回一个文件类对象，其中封装了socket，以便于你以后将它传递给要求参数为一个文件的代码（或许你喜欢使用文件的方法来代替send和recv）。这个可选的mode和bufsize参数的取值和内建的open函数一样。
+4。使用socket选项
+4、使用socket选项
+socket对象的getpeername()和getsockname()方法都返回包含一个IP地址和端口的二元组（这个二元组的形式就像你传递给connect和bind的）。getpeername返回所连接的远程socket的地址和端口，getsockname返回关于本地socket的相同信息。
+在默认情况下，socket是阻塞式的，意思就是socket的方法的调用在任务完成之前是不会返回的。例如，如果存储向外发送的数据的缓存已满，你又企图发送更多的数据，那么你对send的调用将被阻塞直到它能够将更多的数据放入缓存。你可以通过调用setblocking(flag)方法（其中flag取值是0，setblocking(0)）来改变这个默认行为，以使socket为非阻塞式。当socket为非阻塞式的时候，如果所做的动作将导致阻塞，将会引起error异常。下面一段代码将试图不断地接受新的连接并使用函数processRequest来处理。如果一个新连接无效，它将间隔半秒再试。另一方法是在你的监听socket上调用select或poll来检测一个新的连接的到达。
+别的socket的选项可以使用setsockopt(level,name,value)和getsockopt(level,name[,buflen])方法来设置和获取。socket代表了一个协议栈的不同层，level参数指定了选项应用于哪一层。level的取值以SOL_开头（SOL_SOCKET,SOL_TCP等等）。name表明你涉及的是哪个选项。对于value，如果该选项要求数值的值，value只能传入数字值。你也可以传递入一个缓存（一个字符串），但你必须使用正确的格式。对getsockopt，不指定buflen参数意味你要求一个数字值，并返回这个值。如果你提供了buflen，getsockopt返回代表一个缓存的字符串，它的最大长度是buflen的字节数。下面的例子设置了一个socket的用于发送的缓存尺寸为64KB：
+>>> s=socket(AF_INET,SOCK_STREAM)
+>>> s.setsockopt(SOL_SOCKET,SO_SNDBUF,65535)
+要得到一个包在被路由丢弃前所能有的生命周期（TTL）和跳数，你可以使用如下代码：
+>>> s.getsockopt(SOL_IP,IP_TTL)
+32
+5、数值转换
+由于不同平台的字节顺序不一样，所以当在网络中传输数据时我们使用标准的网络字节顺序。nthol(x)和ntohs(x)函数要求一个网络字节顺序的数值并把它转换为当前主机字节顺序的相同数值，而htonl(x)和htons(x)则相反：
+>>> import.socket
+>>> socket.htons(20000) #转换为一个16位的值
+8270
+>>> socket.htonl(20000) #转换为一个32位的值
+541982720
+>>> socket.ntohl(541982720)
+20000
+使用SocketServers
+SocketServers模块为一组socket服务类定义了一个基类，这组类压缩和隐藏了监听、接受和处理进入的socket连接的细节。
+1、SocketServers家族
+TCPServer和UDPServer都是SocketServer的子类，它们分别处理TCP和UDP信息。
+注意：SocketServer也提供UnixStreamServer(TCPServer的子类)和UNIXdatagramServer(UDPServer的子类)，它们都如同其父类一样除了在创建监听socket时使用AF_UNIX代替了AF_INET。
+默认情况下，socket服务一次处理一个连接，但是你可以使用ThreadingMixIN和ForkingMixIn类来创建任一SocketServer的线程和子进程。实际上，SocketServer模块提供了一些对些有用的类来解决你的麻烦，它们是：ForkingUDPServer、ForkingTCPServer、ThreadingUDPServer、ThreadingTCPServer、ThreadingUnixStreamServer和ThreadingUnixDatagramServer。
+SocketServer以通常的方法处理进入的连接；要使它更有用，你应该提供你自己的请求处理器类给它以便它传递一个socket去处理。SocketServer模块中的BaseRequestHandler类是所有请求处理器的父类。假设，例如你需要写一个多线程的电子邮件服务器，首先你要创建一个MailRequestHandler，它是BaseRequestHandler的子类，然后把它传递给一个新创建的SocketServer:
+import SocketServer
+...#创建你的MailRequestHandler
+addr=('220.172.20.6',25) #监听的地址和端口
+server=SocketServer.ThreadingTCPServer(addr,MailRequestHandler)
+server.serve_forever()
+每次一个新的连接到来时，这个server创建一个新的MailRequestHandler实例并调用它的handle()方法来处理这个新的请求。因为server继承自ThreadingTCPServer，对于每个新的请求它都启动一个单独的线程来处理这个请求，以便于多个请求能够被同时处理。如果用handle_request()代替server_forever，它将一个一个的处理连接请求。server_forever 只是反复调用handle_request而已。
+一般来说，你只需使用socket服务之一，但是如果你需要创建你自己的子类的话，你可以覆盖我们下面提到的方法来定制它。
+当服务被第一次创建的时候，__init__函数调用server_bind()方法来绑定监听socket(self.socket)到正确的地址(self.server_address)。然后调用server_activate()来激活这个服务(默认情况下，调用socket的listen方法)。
+这个socket服务不做任何事情直到调用了handle_request或serve_forever方法。handle_request调用get_request()去等待和接收一个新的socket连接，然后调用verify_request(request,client_address)去看服务是否会处理这个连接(你可以在访问控制中使用这个，默认情况下verify_request总是返回true)。如果会处理这个请求，handle_request然后调用process_request(request,client_address)，如果process_request(request,client_address)导致一个异常的话，将调用handle_error(request,client_address)。默认情况下，process_request简单地调用finish_request(request,client_address)；子进程和线程类覆盖了这个行为去开始一新的进程或线程，然后调用finish_request。finish_request实例化一个新的请求处理器，请求处理器轮流调用它们的handle()方法。
+当SocketServer创建一个新的请求处理器时，它传递给这个处理器的__init__函数的self变量，以便于这个处理器能够访问关于这个服务的信息。
+SocketServer的fileno()方法返回监听socket的文件描述符。address_family成员变量指定了监听socket的socket族(如AF_INET)，server_address包含了监听socket被绑定到的地址。socket变量包含监听socket自身。
+2、请求处理器
+请求处理器有setup()、handle()和finish()方法，你可以覆盖它们来定制你自己的行为。一般情况下，你只需要覆盖handle方法。BaseRequestHandler的__init__函数调用setup()方法来做初始化的工作，handle()服务于请求，finish()用于执行清理工作，如果handle或setup导致一个异常，finish不会被调用。记住，你的请求处理器会为每个请求创建一个新的实例。
+request成员变量有关于流(TCP)服务的最近接受的socket；对于数据报服务，它是一个包含进入消息和监听socket的元组。client_address包含发送者的地址，server有对SocketServer的一个引用(通过这你可以访问它的成员，如server_address)。
+下面的例子实现了一个EchoRequestHandler，这作为一个服务端它将客户端所发送的数据再发送回客户端：
+>>> import SocketServer
+>>> class EchoRequestHandler(SocketServer.BaseRequestHandler):
+...    def handle(self):
+...        print 'Got new connection!'
+...        while 1:
+...            mesg=self.request.recv(1024)
+...            if not msg:
+...                break
+...            print 'Received:',msg
+...            self.request.send(msg)
+...        print 'Done with connection'
+>>> server=SocketServer.ThreadingTCPServer(('127.0.0.1',12321),EchoReuestHandler)
+>>> server.handle_request() #执行后将等待连接
+Got new connection!
+Received: Hello!
+Received: I like Tuesdays!
+Done with connection
+打开另一个Python解释器作为客户端，然后执行如下代码：
+>>> from socket import *
+>>> s=socket(AF_INET,SOCK_STREAM)
+>>> s.connect(('120.0.0.1',12321))
+>>> s.send('Hello!')
+6
+>>> print s.recv(1024)
+Hello!
+>>> s.send('I like Tuesdays!')
+16
+>>> print s.recv(1024)
+I like Tuesdays!
+>>> s.close()
+SocketServer模块也定义了BaseRequestHandler的两个子类：StreamRequestHandler和DatagramRequestHandler。它们覆盖了setup和finish方法并创建了两个文件对象rfile和wfile，你可以用这两个文件对象来向客户端读写数据，从而代替使用socket方法。
